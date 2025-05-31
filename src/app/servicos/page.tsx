@@ -113,7 +113,7 @@ export default function ServicosPage() {
           name="status_filter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="border p-2 rounded w-full md:w-1/4"
+          className="border p-2 rounded w-full md:w-1/4 hover:bg-gray-700 hover:text-white"
         >
           <option value="" >Todos os Status</option>
           {statusServicos.map(status => (

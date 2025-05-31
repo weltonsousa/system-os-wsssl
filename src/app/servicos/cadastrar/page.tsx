@@ -159,7 +159,7 @@ export default function CadastrarServicoPage() {
           {errors.descricao_problema && <p className="text-red-500 text-xs mt-1">{errors.descricao_problema.message}</p>}
         </div>
 
-        <h2 className="text-xl font-semibold pt-4 border-t mt-6 text-blue-600">Detalhes do Equipamento (Opcional)</h2>
+        <h2 className="text-xl font-semibold pt-4 mt-6 text-blue-600">Detalhes do Equipamento (Opcional)</h2>
         <div>
           <label htmlFor="equipamento_descricao" className="block text-sm font-medium text-gray-700">Descrição do Equipamento</label>
           <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
@@ -177,7 +177,7 @@ export default function CadastrarServicoPage() {
           <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
 
-        <h2 className="text-xl font-semibold pt-4 border-t mt-6 text-blue-600">Valores e Prazos (Opcional)</h2>
+        <h2 className="text-xl font-semibold pt-4  mt-6 text-blue-600">Valores e Prazos (Opcional)</h2>
         <div>
           <label htmlFor="data_previsao_saida" className="block text-sm font-medium text-gray-700">Data de Previsão de Saída</label>
           <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />

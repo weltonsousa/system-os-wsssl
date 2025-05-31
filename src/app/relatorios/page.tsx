@@ -183,12 +183,12 @@ export default function RelatoriosPage() {
               id="filtroStatusId"
               value={filtroStatusId}
               onChange={(e) => setFiltroStatusId(e.target.value)}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
               disabled={loadingStatus}
             >
               <option value="">Todos os Status</option>
               {statusServicos.map(status => (
-                <option key={status.id_status_servico} value={status.id_status_servico} className="bg-black">{status.nome_status}</option>
+                <option key={status.id_status_servico} value={status.id_status_servico} >{status.nome_status}</option>
               ))}
             </select>
           </div>
@@ -289,11 +289,11 @@ export default function RelatoriosPage() {
               id="filtroTipoPessoaFaturamento"
               value={filtroTipoPessoaFaturamento}
               onChange={(e) => setFiltroTipoPessoaFaturamento(e.target.value as "TODOS" | "FISICA" | "JURIDICA")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
             >
               <option value="TODOS">Todos</option>
-              <option value={TipoPessoa.FISICA} className="bg-black">Pessoa Física</option>
-              <option value={TipoPessoa.JURIDICA} className="bg-black">Pessoa Jurídica</option>
+              <option value={TipoPessoa.FISICA} >Pessoa Física</option>
+              <option value={TipoPessoa.JURIDICA} >Pessoa Jurídica</option>
             </select>
           </div>
         </div>
