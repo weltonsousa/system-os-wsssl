@@ -42,3 +42,9 @@ next-env.d.ts
 
 # Anotations
 ToDo.txt
+logo2.png
+
+/prisma
+prisma/dev.db
+prisma/schema.prisma
+dev.db

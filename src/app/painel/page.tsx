@@ -1,6 +1,13 @@
+import { getServerSession } from "next-auth";
+import { GET as authHandler } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
 import Link from 'next/link';
 
-export default function PainelPage() {
+export default async function PainelPage() {
+  const session = await getServerSession(authHandler);
+  if (!session) redirect("/login");
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-12">Bem-vindo ao Sistema de Gerenciamento WS Service Solutions</h1>

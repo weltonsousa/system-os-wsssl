@@ -1,62 +1,50 @@
 "use client";
 import Link from 'next/link';
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { signOut, useSession } from 'next-auth/react';
 
-interface JwtPayload {
-  name: string;
-  email: string;
-  id: string;
-  exp: number;
-}
 
 const Navbar = () => {
-  const [user, setUser] = useState<JwtPayload | null>(null);
+  const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decoded = jwtDecode<JwtPayload>(token);
-          setUser(decoded);
-        } catch {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
     router.push("/login");
   };
 
   return (
     <nav className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
       <div>
-        <Link href="/" className="font-bold text-lg">WS Service Solutions</Link>
+        {session?.user?.name ? (
+          <>
+            <Link href="/painel" className="font-bold text-lg">WS Service Solutions</Link>
+          </>
+
+        ) : (
+          <>
+            <Link href="/" className="font-bold text-lg">WS Service Solutions</Link>
+          </>
+        )}
       </div>
       <div className="flex items-center gap-4">
-        {user ? (
+        {status === "authenticated" && session?.user ? (
           <>
-            <span>Olá, {user.name}</span>
+            <Link href="/clientes" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Clientes</Link>
+            <Link href="/servicos" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Serviços</Link>
+            <Link href="/relatorios" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Relatórios</Link>
+            <span>Olá, {session.user.name}</span>
             <button
               onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+              className="inline-block bg-red-500 hover:bg-red-600 text-white font-normal py-2 px-4 rounded"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link href="/login" className="hover:underline">Login</Link>
-            <Link href="/register" className="hover:underline">Registrar</Link>
+            <Link href="/login" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Login</Link>
+            {/* <Link href="/register" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Registrar</Link> */}
           </>
         )}
       </div>
