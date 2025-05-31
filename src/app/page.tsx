@@ -1,4 +1,6 @@
 
+import Image from 'next/image';
+
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -33,9 +35,14 @@ export default function HomePage() {
         <h3 className="text-xl font-semibold mb-3 text-gray-700">SOLUÇÕES EM TECNOLOGIA
           DA INFORMAÇÃO</h3>
         <p className="text-gray-600">
-          Somos uma Empresa Especializada em Desenvolvimento de Sistema, Hospedagem de Site, Produtos Apple e Locação de Computadores.
+          <Image
+            src="/images/logo.png"
+            alt="Logo WS Service Solutions"
+            width={192}
+            height={96}
+            className="mx-auto mb-8 w-48 h-auto"
+          />
         </p>
-        <img src="/images/logo.png" alt="Logo WS Service Solutions" className="mx-auto mb-8 w-48 h-auto" />
 
       </div>
       <div className="mt-12 p-6 bg-gray-100 rounded-lg">
