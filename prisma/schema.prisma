@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Enum para tipo de pessoa (cliente)
+enum TipoPessoa {
+  FISICA
+  JURIDICA
+}
+
+model Cliente {
+  id_cliente          String     @id @default(cuid())
+  tipo_pessoa         TipoPessoa
+  // Campos Pessoa Física
+  nome_completo       String?
+  cpf                 String?    @unique
+  // Campos Pessoa Jurídica
+  razao_social        String?
+  nome_fantasia       String?
+  cnpj                String?    @unique
+  inscricao_estadual  String?
+  inscricao_municipal String?
+  nome_contato_pj     String?
+  // Campos Comuns
+  telefone_principal  String
+  telefone_secundario String?
+  email               String     @unique
+  cep                 String?
+  rua                 String?
+  numero              String?
+  complemento         String?
+  bairro              String?
+  cidade              String?
+  estado_uf           String?
+  observacoes         String?
+  data_cadastro       DateTime   @default(now())
+  data_atualizacao    DateTime   @updatedAt
+  ativo               Boolean    @default(true)
+
+  servicos Servico[]
+
+  @@map("clientes")
+}
+
+model TipoServico {
+  id_tipo_servico   String    @id @default(cuid())
+  nome_tipo_servico String    @unique
+  descricao         String?
+  servicos          Servico[]
+
+  @@map("tipos_servico")
+}
+
+model StatusServico {
+  id_status_servico  String             @id @default(cuid())
+  nome_status        String             @unique // Ex: Pendente, Em Análise, Concluído
+  descricao          String?
+  ordem              Int?
+  servicos           Servico[]          @relation("ServicoStatusAtual")
+  historico_anterior HistoricoServico[] @relation("StatusAnterior")
+  historico_novo     HistoricoServico[] @relation("StatusNovo")
+
+  @@map("status_servico")
+}
+
+model Servico {
+  id_servico            String        @id @default(cuid())
+  cliente               Cliente       @relation(fields: [id_cliente], references: [id_cliente])
+  id_cliente            String
+  tipo_servico          TipoServico   @relation(fields: [id_tipo_servico], references: [id_tipo_servico])
+  id_tipo_servico       String
+  descricao_problema    String
+  equipamento_descricao String?
+  equipamento_marca     String?
+  equipamento_modelo    String?
+  equipamento_num_serie String?
+  data_entrada          DateTime      @default(now())
+  data_previsao_saida   DateTime?
+  data_efetiva_saida    DateTime?
+  status_atual          StatusServico @relation("ServicoStatusAtual", fields: [id_status_atual], references: [id_status_servico])
+  id_status_atual       String
+  valor_servico         Float?        @default(0.0)
+  valor_pecas           Float?        @default(0.0)
+  valor_mao_de_obra     Float?        @default(0.0)
+  descricao_solucao     String?
+  observacoes_internas  String?
+  data_criacao          DateTime      @default(now())
+  data_atualizacao      DateTime      @updatedAt
+
+  historico HistoricoServico[]
+
+  @@map("servicos")
+}
+
+model HistoricoServico {
+  id_historico_servico String         @id @default(cuid())
+  servico              Servico        @relation(fields: [id_servico], references: [id_servico], onDelete: Cascade)
+  id_servico           String
+  status_anterior      StatusServico? @relation("StatusAnterior", fields: [id_status_anterior], references: [id_status_servico])
+  id_status_anterior   String?
+  status_novo          StatusServico  @relation("StatusNovo", fields: [id_status_novo], references: [id_status_servico])
+  id_status_novo       String
+  data_alteracao       DateTime       @default(now())
+  observacao           String?
+  // id_usuario_alteracao String?
+
+  @@map("historico_servico")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

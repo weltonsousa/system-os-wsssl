@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  postgres_ws:
+    image: postgres:15-alpine
+    container_name: ws_service_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: wsuser
+      POSTGRES_PASSWORD: wspassword
+      POSTGRES_DB: ws_service_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_ws:/var/lib/postgresql/data
+
+volumes:
+  postgres_data_ws:
+
