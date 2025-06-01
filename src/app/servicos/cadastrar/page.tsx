@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Servico, Cliente, TipoServico, StatusServico } from "@/types";
+import { Cliente, TipoServico, StatusServico } from "@/types";
 import { useEffect, useState } from "react";
 
 const servicoFormSchema = z.object({
@@ -107,9 +107,14 @@ export default function CadastrarServicoPage() {
         throw new Error(errorMessage);
       }
       router.push("/servicos");
-    } catch (err: any) {
-      setError(err.message);
-      console.error("Erro ao cadastrar serviço:", err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        console.error("Erro ao cadastrar serviço:", err);
+      } else {
+        setError("Erro desconhecido ao cadastrar serviço.");
+        console.error("Erro ao cadastrar serviço:", err);
+      }
     } finally {
       setIsSubmitting(false);
     }
