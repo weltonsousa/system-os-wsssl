@@ -45,7 +45,7 @@ export default function ServicosPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
+  // const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
   const [statusServicos, setStatusServicos] = useState<StatusServico[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,8 +54,8 @@ export default function ServicosPage() {
     Promise.all([
       fetchTiposServico(),
       fetchStatusServico()
-    ]).then(([tiposData, statusData]) => {
-      setTiposServico(tiposData);
+    ]).then(([, statusData]) => {
+      // setTiposServico(tiposData); // tiposServico não é utilizado
       setStatusServicos(statusData);
     }).catch(err => {
       console.error("Erro ao buscar dados de apoio:", err);
