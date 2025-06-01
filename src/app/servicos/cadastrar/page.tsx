@@ -57,7 +57,7 @@ export default function CadastrarServicoPage() {
   const router = useRouter();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
-  const [statusServico, setStatusServico] = useState<StatusServico[]>([]);
+  // const [statusServico, setStatusServico] = useState<StatusServico[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -74,10 +74,10 @@ export default function CadastrarServicoPage() {
       fetchClientesParaSelect(),
       fetchTiposServicoParaSelect(),
       fetchStatusServicoParaSelect(),
-    ]).then(([clientesData, tiposData, statusData]) => {
+    ]).then(([clientesData, tiposData]) => {
       setClientes(clientesData);
       setTiposServico(tiposData);
-      setStatusServico(statusData);
+      // setStatusServico(statusData);
     }).catch(err => {
       console.error("Erro ao carregar dados de apoio:", err);
       setError("Erro ao carregar clientes ou tipos de serviço.");
