@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
       const doc = new PDFDocument({ margin: 40, size: 'A4' });
       const buffers: Buffer[] = [];
       doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => {});
+      doc.on('end', () => { });
 
       // Título
       doc.fontSize(22).fillColor('#1a202c').text('Relatório de Faturamento', { align: 'center', underline: true });
@@ -142,8 +142,8 @@ export async function GET(request: NextRequest) {
       y += 10;
 
       // Total em destaque
-      doc.fontSize(14).fillColor('#1a202c').font('Helvetica').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
-        width: colWidths.reduce((a, b) => a + b, 0), align: 'right', bold: true
+      doc.fontSize(14).fillColor('#1a202c').font('Helvetica-Bold').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
+        width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
       });
       doc.end();
 
