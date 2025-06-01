@@ -18,9 +18,9 @@ const servicoSchema = z.object({
   observacoes_internas: z.string().optional().nullable(),
 });
 
-const servicoUpdateSchema = servicoSchema.partial().extend({
-  data_efetiva_saida: z.string().datetime({ offset: true }).optional().nullable(),
-});
+// const servicoUpdateSchema = servicoSchema.partial().extend({
+//   data_efetiva_saida: z.string().datetime({ offset: true }).optional().nullable(),
+// });
 
 export async function POST(request: NextRequest) {
   try {
@@ -80,10 +80,10 @@ export async function GET(request: NextRequest) {
   const skip = (page - 1) * limit;
 
   try {
-    const whereClause: any = {};
+    const whereClause: import("@prisma/client").Prisma.ServicoWhereInput = {};
     if (search) {
       whereClause.OR = [
-        { id_servico: { contains: search} },
+        { id_servico: { contains: search } },
         { descricao_problema: { contains: search } },
         { equipamento_descricao: { contains: search } },
         { cliente: { nome_completo: { contains: search } } },

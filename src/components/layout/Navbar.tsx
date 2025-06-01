@@ -33,6 +33,7 @@ const Navbar = () => {
             <Link href="/clientes" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Clientes</Link>
             <Link href="/servicos" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Serviços</Link>
             <Link href="/relatorios" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Relatórios</Link>
+            <Link href="/configuracao" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Configuração</Link>
             <span>Olá, {session.user.name}</span>
             <button
               onClick={handleLogout}
