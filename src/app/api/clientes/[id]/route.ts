@@ -26,8 +26,8 @@ const clienteUpdateSchema = z.object({
   ativo: z.boolean().optional(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_cliente = params.id;
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_cliente = (await params).id;
 
   try {
     const cliente = await prisma.cliente.findUnique({
