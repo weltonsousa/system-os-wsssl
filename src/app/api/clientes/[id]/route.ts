@@ -26,8 +26,9 @@ const clienteUpdateSchema = z.object({
   ativo: z.boolean().optional(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+// 🚀 GET - Buscar Cliente por ID
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const cliente = await prisma.cliente.findUnique({
@@ -44,12 +45,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+// 🚀 PUT - Atualizar Cliente
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const body = await request.json();
-    console.log("Body recebido:", body);
     const data = clienteUpdateSchema.parse(body);
 
     const clienteExistente = await prisma.cliente.findUnique({
@@ -60,7 +61,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Cliente não encontrado." }, { status: 404 });
     }
 
-    // Verificar unicidade de email se estiver sendo alterado
+    // Verificar email único
     if (data.email && data.email !== clienteExistente.email) {
       const existingEmail = await prisma.cliente.findUnique({
         where: { email: data.email },
@@ -70,7 +71,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
-    // Verificar unicidade de CPF/CNPJ se estiverem sendo alterados
+    // Verificar CPF/CNPJ único
     if (data.tipo_pessoa === "FISICA" && data.cpf && data.cpf !== clienteExistente.cpf) {
       const existingCpf = await prisma.cliente.findUnique({
         where: { cpf: data.cpf },
@@ -88,7 +89,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
-    // Lógica para limpar campos específicos se o tipo de pessoa mudar
+    // Limpar campos de acordo com tipo de pessoa
     const finalData: Record<string, unknown> = { ...data };
     if (data.tipo_pessoa && data.tipo_pessoa !== clienteExistente.tipo_pessoa) {
       if (data.tipo_pessoa === "FISICA") {
@@ -118,12 +119,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+// 🚀 DELETE - Inativar Cliente
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const servicosCount = await prisma.servico.count({
-      where: { id_cliente: id_cliente },
+      where: { id_cliente },
     });
 
     if (servicosCount > 0) {
@@ -137,10 +139,10 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       where: { id_cliente },
       data: { ativo: false },
     });
+
     return NextResponse.json(null, { status: 204 });
   } catch (error) {
     console.error(`Erro ao deletar cliente ${id_cliente}:`, error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
-
