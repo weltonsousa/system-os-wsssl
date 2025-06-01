@@ -89,7 +89,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Lógica para limpar campos específicos se o tipo de pessoa mudar
-    let finalData: any = { ...data };
+    const finalData: Record<string, unknown> = { ...data };
     if (data.tipo_pessoa && data.tipo_pessoa !== clienteExistente.tipo_pessoa) {
       if (data.tipo_pessoa === "FISICA") {
         finalData.razao_social = null;

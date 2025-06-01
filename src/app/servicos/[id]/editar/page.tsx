@@ -84,7 +84,6 @@ export default function EditarServicoPage() {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
   } = useForm<ServicoUpdateFormData>({
     resolver: zodResolver(servicoUpdateFormSchema),
   });
@@ -139,9 +138,14 @@ export default function EditarServicoPage() {
         throw new Error(errorData.error || "Falha ao atualizar serviço");
       }
       router.push(`/servicos/${servicoId}`); // Volta para a página de detalhes
-    } catch (err: any) {
-      setError(err.message);
-      console.error("Erro ao atualizar serviço:", err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        console.error("Erro ao atualizar serviço:", err);
+      } else {
+        setError("Erro desconhecido ao atualizar serviço");
+        console.error("Erro desconhecido:", err);
+      }
     } finally {
       setIsSubmitting(false);
     }
