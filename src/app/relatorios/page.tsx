@@ -107,9 +107,14 @@ export default function RelatoriosPage() {
         document.body.removeChild(link);
       }
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
-      console.error(`Erro ao baixar relatório ${tipoRelatorio}:`, err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        console.error(`Erro ao baixar relatório ${tipoRelatorio}:`, err);
+      } else {
+        setError("Erro desconhecido ao baixar relatório");
+        console.error(`Erro desconhecido ao baixar relatório ${tipoRelatorio}:`, err);
+      }
     }
   };
 
@@ -131,8 +136,15 @@ export default function RelatoriosPage() {
       }
       const data = await response.json();
       setResultadoServicosStatus(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        console.error("Erro ao buscar relatório de serviços por status:", err);
+      } else {
+        setError("erro desconhecido ao buscar relatório de serviços por status");
+        setResultadoServicosStatus(null);
+        console.error("Erro desconhecido ao buscar relatório de serviços por status:", err);
+      }
     } finally {
       setLoadingResultadoServicos(false);
     }
@@ -161,8 +173,15 @@ export default function RelatoriosPage() {
       }
       const data = await response.json();
       setResultadoFaturamento(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+        console.error("Erro ao buscar relatório de faturamento:", err);
+      } else {
+        setError("erro desconhecido ao buscar relatório de faturamento");
+        console.error("Erro desconhecido ao buscar relatório de faturamento:", err);
+      }
+      setResultadoFaturamento(null);
     } finally {
       setLoadingResultadoFaturamento(false);
     }
