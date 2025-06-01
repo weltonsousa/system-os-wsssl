@@ -44,8 +44,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_cliente = params.id;
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_cliente = (await params).id;
 
   try {
     const body = await request.json();
@@ -118,8 +118,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_cliente = params.id;
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_cliente = (await params).id;
 
   try {
     const servicosCount = await prisma.servico.count({
