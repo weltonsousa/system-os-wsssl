@@ -17,18 +17,9 @@ const servicoFormSchema = z.object({
   equipamento_modelo: z.string().optional(),
   equipamento_num_serie: z.string().optional(),
   data_previsao_saida: z.string().optional().nullable(), // Validar como data se necessário
-  valor_servico: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
-  valor_pecas: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
-  valor_mao_de_obra: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
+  valor_servico: z.number().nullable().optional(),
+  valor_pecas: z.number().nullable().optional(),
+  valor_mao_de_obra: z.number().nullable().optional(),
 });
 
 type ServicoFormData = z.infer<typeof servicoFormSchema>;

@@ -19,18 +19,9 @@ const servicoUpdateFormSchema = z.object({
   data_previsao_saida: z.string().optional().nullable(),
   data_efetiva_saida: z.string().optional().nullable(),
   id_status_atual: z.string().min(1, "Status é obrigatório"),
-  valor_servico: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
-  valor_pecas: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
-  valor_mao_de_obra: z.preprocess(
-    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
-    z.number().nullable().optional()
-  ),
+  valor_servico: z.number().nullable().optional(),
+  valor_pecas: z.number().nullable().optional(),
+  valor_mao_de_obra: z.number().nullable().optional(),
   descricao_solucao: z.string().optional().nullable(),
   observacoes_internas: z.string().optional().nullable(),
 });
