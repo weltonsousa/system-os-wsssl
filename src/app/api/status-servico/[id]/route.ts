@@ -8,8 +8,8 @@ const tipoServicoUpdateSchema = z.object({
   descricao: z.string().min(1, "Descrição do status é obrigatória"),
 });
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_status_servico = params.id;
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_status_servico = (await params).id;
   //console.log(id_status);
   try {
     const statusServico = await prisma.statusServico.findUnique({
@@ -26,8 +26,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_status_servico = params.id;
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_status_servico = (await params).id;
 
   try {
     const body = await request.json();
@@ -56,8 +56,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  const id_status_servico = params.id;
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const id_status_servico = (await params).id;
 
   try {
     // A exclusão em cascata do histórico é definida no schema do Prisma
