@@ -94,11 +94,11 @@ export default function StatusServicoPage() {
           name="status_filter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="border p-2 rounded w-full md:w-1/4"
+          className="border p-2 rounded w-full md:w-1/4 hover:bg-gray-700 hover:text-white"
         >
           <option value="" >Todos os Status</option>
           {statusServico.map(status => (
-            <option key={status.id_status_servico} value={status.id_status_servico} className="bg-black">
+            <option key={status.id_status_servico} value={status.id_status_servico}>
               {status.nome_status}
             </option>
           ))}
