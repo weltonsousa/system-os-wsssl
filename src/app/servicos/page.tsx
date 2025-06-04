@@ -117,7 +117,7 @@ export default function ServicosPage() {
         >
           <option value="" >Todos os Status</option>
           {statusServicos.map(status => (
-            <option key={status.id_status_servico} value={status.id_status_servico} className="bg-black">
+            <option key={status.id_status_servico} value={status.id_status_servico} >
               {status.nome_status}
             </option>
           ))}
