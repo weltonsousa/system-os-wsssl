@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Cliente, TipoServico, StatusServico } from "@/types";
 import { useEffect, useState } from "react";
 
+
 const servicoFormSchema = z.object({
   id_cliente: z.string().min(1, "Cliente é obrigatório"),
   id_tipo_servico: z.string().min(1, "Tipo de serviço é obrigatório"),
@@ -84,6 +85,7 @@ export default function CadastrarServicoPage() {
         data_previsao_saida: data.data_previsao_saida ? new Date(data.data_previsao_saida).toISOString() : null,
       };
 
+      // Enviar os dados para a API
       const response = await fetch("/api/servicos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -180,15 +182,15 @@ export default function CadastrarServicoPage() {
         </div>
         <div>
           <label htmlFor="valor_servico" className="block text-sm font-medium text-gray-700">Valor Total do Serviço (R$)</label>
-          <input type="number" step="0.01" id="valor_servico" {...register("valor_servico")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
-          <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor das Peças (R$)</label>
-          <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor d,as Peças (R$)</label>
+          <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="valor_mao_de_obra" className="block text-sm font-medium text-gray-700">Valor da Mão de Obra (R$)</label>
-          <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
 
         <div className="flex justify-end space-x-3 pt-4">
