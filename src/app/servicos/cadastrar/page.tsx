@@ -185,7 +185,7 @@ export default function CadastrarServicoPage() {
           <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
-          <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor d,as Peças (R$)</label>
+          <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor das Peças (R$)</label>
           <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
