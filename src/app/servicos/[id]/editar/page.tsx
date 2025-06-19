@@ -19,9 +19,18 @@ const servicoUpdateFormSchema = z.object({
   data_previsao_saida: z.string().optional().nullable(),
   data_efetiva_saida: z.string().optional().nullable(),
   id_status_atual: z.string().min(1, "Status é obrigatório"),
-  valor_servico: z.number().nullable().optional(),
-  valor_pecas: z.number().nullable().optional(),
-  valor_mao_de_obra: z.number().nullable().optional(),
+  valor_servico: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
+  valor_pecas: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
+  valor_mao_de_obra: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
   descricao_solucao: z.string().optional().nullable(),
   observacoes_internas: z.string().optional().nullable(),
 });
@@ -75,6 +84,7 @@ export default function EditarServicoPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<ServicoUpdateFormData>({
     resolver: zodResolver(servicoUpdateFormSchema),
   });
@@ -129,14 +139,9 @@ export default function EditarServicoPage() {
         throw new Error(errorData.error || "Falha ao atualizar serviço");
       }
       router.push(`/servicos/${servicoId}`); // Volta para a página de detalhes
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-        console.error("Erro ao atualizar serviço:", err);
-      } else {
-        setError("Erro desconhecido ao atualizar serviço");
-        console.error("Erro desconhecido:", err);
-      }
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Erro ao atualizar serviço:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -149,7 +154,7 @@ export default function EditarServicoPage() {
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-2xl font-bold mb-6  text-gray-800">Editar Ordem de Serviço (OS: {servicoId?.substring(0, 8)}...)</h1>
+        <h1 className="text-2xl font-bold mb-6  text-gray-800">Editar Ordem de Serviço (OS: {servicoId?.substring(0,8)}...)</h1>
         {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -157,7 +162,7 @@ export default function EditarServicoPage() {
             <select
               id="id_cliente"
               {...register("id_cliente")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
               <option value="">Selecione um cliente</option>
               {clientes.map(cliente => (
@@ -174,11 +179,11 @@ export default function EditarServicoPage() {
             <select
               id="id_tipo_servico"
               {...register("id_tipo_servico")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
               <option value="">Selecione o tipo de serviço</option>
               {tiposServico.map(tipo => (
-                <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!} >
+                <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!} className="bg-black">
                   {tipo.nome_tipo_servico}
                 </option>
               ))}
@@ -190,11 +195,11 @@ export default function EditarServicoPage() {
             <select
               id="id_status_atual"
               {...register("id_status_atual")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
               <option value="">Selecione o status</option>
               {statusServico.map(status => (
-                <option key={status.id_status_servico} value={status.id_status_servico!}>
+                <option key={status.id_status_servico} value={status.id_status_servico!} className="bg-black">
                   {status.nome_status}
                 </option>
               ))}

@@ -21,8 +21,8 @@ const servicoUpdateSchema = z.object({
   observacoes_internas: z.string().optional().nullable(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_servico = (await params).id;
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_servico = params.id;
 
   try {
     const servico = await prisma.servico.findUnique({
@@ -53,8 +53,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_servico = (await params).id;
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_servico = params.id;
 
   try {
     const body = await request.json();
@@ -95,8 +95,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_servico = (await params).id;
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_servico = params.id;
 
   try {
     // A exclusão em cascata do histórico é definida no schema do Prisma

@@ -23,7 +23,7 @@ async function fetchTiposServico() {
 
 export default function CadastrarServicoPage() {
   const router = useRouter();
-  // const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
+  const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,7 +37,9 @@ export default function CadastrarServicoPage() {
 
   useEffect(() => {
     fetchTiposServico()
-      .catch(err => {
+      .then((tiposData) => {
+        setTiposServico(tiposData);
+      }).catch(err => {
         console.error("Erro ao carregar dados de apoio:", err);
         setError("Erro ao carregar tipos de serviço.");
       });
@@ -64,14 +66,10 @@ export default function CadastrarServicoPage() {
       }
 
       router.push("/configuracao/tipos-servico");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        const message = err?.message || JSON.stringify(err);
-        setError(message);
-      } else {
-        console.error("Erro ao cadastrar tipo de serviço:", err);
-        setError("Erro ao cadastrar tipo de serviço.");
-      }
+    } catch (err: any) {
+      const message = err?.message || JSON.stringify(err);
+      setError(message);
+      console.error("Erro ao cadastrar tipo de serviço:", message);
     } finally {
       setIsSubmitting(false);
     }

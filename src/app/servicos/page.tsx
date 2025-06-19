@@ -45,7 +45,7 @@ export default function ServicosPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  // const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
+  const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
   const [statusServicos, setStatusServicos] = useState<StatusServico[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,8 +54,8 @@ export default function ServicosPage() {
     Promise.all([
       fetchTiposServico(),
       fetchStatusServico()
-    ]).then(([, statusData]) => {
-      // setTiposServico(tiposData); // tiposServico não é utilizado
+    ]).then(([tiposData, statusData]) => {
+      setTiposServico(tiposData);
       setStatusServicos(statusData);
     }).catch(err => {
       console.error("Erro ao buscar dados de apoio:", err);
@@ -113,11 +113,11 @@ export default function ServicosPage() {
           name="status_filter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="border p-2 rounded w-full md:w-1/4 hover:bg-gray-700 hover:text-white"
+          className="border p-2 rounded w-full md:w-1/4"
         >
           <option value="" >Todos os Status</option>
           {statusServicos.map(status => (
-            <option key={status.id_status_servico} value={status.id_status_servico} >
+            <option key={status.id_status_servico} value={status.id_status_servico} className="bg-black">
               {status.nome_status}
             </option>
           ))}

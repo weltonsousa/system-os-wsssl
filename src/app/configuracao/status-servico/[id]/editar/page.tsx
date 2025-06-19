@@ -26,7 +26,7 @@ export default function EditarstatusServicoPage() {
   const params = useParams();
   const servicoId = params.id as string;
 
-  // const [statusServico, setStatusServico] = useState<StatusServico>();
+  const [statusServico, setStatusServico] = useState<StatusServico>();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,11 +47,12 @@ export default function EditarstatusServicoPage() {
       fetchStatuServicoById(servicoId)
         .then((statusServico) => {
           if (statusServico) {
-            reset({
-              nome_status: statusServico.nome_status ?? "",
-              descricao: statusServico.descricao ?? "",
-            });
-            // Popula o formulário
+             reset({
+                    nome_status: statusServico.nome_status ?? "",
+                    descricao: statusServico.descricao ?? "",
+                  });
+                  // Popula o formulário
+              setStatusServico(statusServico);
           } else {
             setError("Serviço não encontrado.");
           }

@@ -1,6 +1,4 @@
 
-import Image from 'next/image';
-
 export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -32,21 +30,16 @@ export default function HomePage() {
         </div>
       </div> */}
       <div className="mt-12 p-6 bg-gray-100 rounded-lg">
-        <h3 className="text-xl text-center font-semibold mb-3 text-gray-700">SOLUÇÕES EM TECNOLOGIA
+        <h3 className="text-xl font-semibold mb-3 text-gray-700">SOLUÇÕES EM TECNOLOGIA
           DA INFORMAÇÃO</h3>
-        {/* <p className="text-gray-600"> */}
-        <Image
-          src="/logo2.png"
-          alt="Logo WS Service Solutions"
-          width={192}
-          height={96}
-          className="mx-auto mb-8 w-48 h-auto"
-        />
-        {/* </p> */}
+        <p className="text-gray-600">
+          Somos uma Empresa Especializada em Desenvolvimento de Sistema, Hospedagem de Site, Produtos Apple e Locação de Computadores.
+        </p>
+        <img src="/images/logo.png" alt="Logo WS Service Solutions" className="mx-auto mb-8 w-48 h-auto" />
 
       </div>
       <div className="mt-12 p-6 bg-gray-100 rounded-lg">
-        <h3 className="text-xl text-center font-semibold mb-3 text-gray-700">Sobre este Sistema</h3>
+        <h3 className="text-xl font-semibold mb-3 text-gray-700">Sobre este Sistema</h3>
         <p className="text-gray-600">
           Este sistema foi desenvolvido por WS Service Solutions | Gerenciar de forma eficiente seus serviços de informática, desde o cadastro inicial do cliente e do serviço até o acompanhamento do status e a geração de relatórios. Utilize os links acima para navegar pelas principais seções.
         </p>

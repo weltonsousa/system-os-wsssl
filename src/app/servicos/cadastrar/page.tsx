@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Cliente, TipoServico, StatusServico } from "@/types";
+import { Servico, Cliente, TipoServico, StatusServico } from "@/types";
 import { useEffect, useState } from "react";
-
 
 const servicoFormSchema = z.object({
   id_cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -18,9 +17,18 @@ const servicoFormSchema = z.object({
   equipamento_modelo: z.string().optional(),
   equipamento_num_serie: z.string().optional(),
   data_previsao_saida: z.string().optional().nullable(), // Validar como data se necessário
-  valor_servico: z.number().nullable().optional(),
-  valor_pecas: z.number().nullable().optional(),
-  valor_mao_de_obra: z.number().nullable().optional(),
+  valor_servico: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
+  valor_pecas: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
+  valor_mao_de_obra: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined) ? null : parseFloat(String(val)),
+    z.number().nullable().optional()
+  ),
 });
 
 type ServicoFormData = z.infer<typeof servicoFormSchema>;
@@ -49,7 +57,7 @@ export default function CadastrarServicoPage() {
   const router = useRouter();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
-  // const [statusServico, setStatusServico] = useState<StatusServico[]>([]);
+  const [statusServico, setStatusServico] = useState<StatusServico[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -66,10 +74,10 @@ export default function CadastrarServicoPage() {
       fetchClientesParaSelect(),
       fetchTiposServicoParaSelect(),
       fetchStatusServicoParaSelect(),
-    ]).then(([clientesData, tiposData]) => {
+    ]).then(([clientesData, tiposData, statusData]) => {
       setClientes(clientesData);
       setTiposServico(tiposData);
-      // setStatusServico(statusData);
+      setStatusServico(statusData);
     }).catch(err => {
       console.error("Erro ao carregar dados de apoio:", err);
       setError("Erro ao carregar clientes ou tipos de serviço.");
@@ -85,7 +93,6 @@ export default function CadastrarServicoPage() {
         data_previsao_saida: data.data_previsao_saida ? new Date(data.data_previsao_saida).toISOString() : null,
       };
 
-      // Enviar os dados para a API
       const response = await fetch("/api/servicos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -100,14 +107,9 @@ export default function CadastrarServicoPage() {
         throw new Error(errorMessage);
       }
       router.push("/servicos");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-        console.error("Erro ao cadastrar serviço:", err);
-      } else {
-        setError("Erro desconhecido ao cadastrar serviço.");
-        console.error("Erro ao cadastrar serviço:", err);
-      }
+    } catch (err: any) {
+      setError(err.message);
+      console.error("Erro ao cadastrar serviço:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -157,7 +159,7 @@ export default function CadastrarServicoPage() {
           {errors.descricao_problema && <p className="text-red-500 text-xs mt-1">{errors.descricao_problema.message}</p>}
         </div>
 
-        <h2 className="text-xl font-semibold pt-4 mt-6 text-blue-600">Detalhes do Equipamento (Opcional)</h2>
+        <h2 className="text-xl font-semibold pt-4 border-t mt-6 text-blue-600">Detalhes do Equipamento (Opcional)</h2>
         <div>
           <label htmlFor="equipamento_descricao" className="block text-sm font-medium text-gray-700">Descrição do Equipamento</label>
           <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
@@ -175,22 +177,22 @@ export default function CadastrarServicoPage() {
           <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
 
-        <h2 className="text-xl font-semibold pt-4  mt-6 text-blue-600">Valores e Prazos (Opcional)</h2>
+        <h2 className="text-xl font-semibold pt-4 border-t mt-6 text-blue-600">Valores e Prazos (Opcional)</h2>
         <div>
           <label htmlFor="data_previsao_saida" className="block text-sm font-medium text-gray-700">Data de Previsão de Saída</label>
           <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="valor_servico" className="block text-sm font-medium text-gray-700">Valor Total do Serviço (R$)</label>
-          <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="number" step="0.01" id="valor_servico" {...register("valor_servico")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor das Peças (R$)</label>
-          <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="valor_mao_de_obra" className="block text-sm font-medium text-gray-700">Valor da Mão de Obra (R$)</label>
-          <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
 
         <div className="flex justify-end space-x-3 pt-4">

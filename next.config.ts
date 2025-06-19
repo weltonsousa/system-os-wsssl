@@ -2,9 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  //experimental: {
-  serverExternalPackages: ["pdfkit"],
-  //},
+   experimental: {
+    serverComponentsExternalPackages: ["pdfkit"],
+  },
 };
 
 export default nextConfig;

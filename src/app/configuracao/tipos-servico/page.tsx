@@ -94,11 +94,11 @@ export default function TiposServicoPage() {
           name="status_filter"
           value={statusFilter}
           onChange={handleStatusFilterChange}
-          className="border p-2 rounded w-full md:w-1/4 hover:bg-gray-700 hover:text-white"
+          className="border p-2 rounded w-full md:w-1/4"
         >
           <option value="" >Todos os Tipos de Serviço</option>
           {tiposServico.map(tipos => (
-            <option key={tipos.id_tipo_servico} value={tipos.id_tipo_servico} >
+            <option key={tipos.id_tipo_servico} value={tipos.id_tipo_servico} className="bg-black">
               {tipos.nome_tipo_servico}
             </option>
           ))}

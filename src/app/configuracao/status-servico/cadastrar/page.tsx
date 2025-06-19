@@ -23,7 +23,7 @@ async function fetchStatusServico() {
 
 export default function CadastrarStatusServicoPage() {
   const router = useRouter();
-  // Removido statusServico pois não está sendo utilizado
+  const [statusServico, setStatusServico] = useState<StatusServico[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,7 +37,9 @@ export default function CadastrarStatusServicoPage() {
 
   useEffect(() => {
     fetchStatusServico()
-      .catch(err => {
+      .then((tiposData) => {
+        setStatusServico(tiposData);
+      }).catch(err => {
         console.error("Erro ao carregar dados:", err);
         setError("Erro ao carregar status de serviço.");
       });
@@ -61,14 +63,10 @@ export default function CadastrarStatusServicoPage() {
         throw new Error(errorData.error || "Falha ao cadastrar status de serviço");
       }
       router.push("/configuracao/status-servico");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        const message = err?.message || JSON.stringify(err);
-        setError(message);
-      } else {
-        setError("Erro desconhecido ao cadastrar status de serviço.");
-        console.error("Erro ao cadastrar status de serviço:", err);
-      }
+    } catch (err: any) {
+      const message = err?.message || JSON.stringify(err);
+      setError(message);
+      console.error("Erro ao cadastrar status de serviço:", err);
     } finally {
       setIsSubmitting(false);
     }

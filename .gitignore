@@ -40,11 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Anotations
+# Ignore specific files
 ToDo.txt
-# logo2.png
-
-/prisma
-prisma/dev.db
-prisma/schema.prisma
-dev.db

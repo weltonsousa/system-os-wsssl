@@ -26,7 +26,7 @@ export default function EditarTiposServicoPage() {
   const params = useParams();
   const servicoId = params.id as string;
 
-  // const [tiposServico, setTiposServico] = useState<TipoServico>();
+  const [tiposServico, setTiposServico] = useState<TipoServico>();
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,11 +47,12 @@ export default function EditarTiposServicoPage() {
       fetchTipoServicoById(servicoId)
         .then((tipoServico) => {
           if (tipoServico) {
-            reset({
-              nome_tipo_servico: tipoServico.nome_tipo_servico ?? "",
-              descricao: tipoServico.descricao ?? "",
-            });
-            // Popula o formulário
+             reset({
+                    nome_tipo_servico: tipoServico.nome_tipo_servico ?? "",
+                    descricao: tipoServico.descricao ?? "",
+                  });
+                  // Popula o formulário
+              setTiposServico(tipoServico);
           } else {
             setError("Serviço não encontrado.");
           }

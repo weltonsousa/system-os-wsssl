@@ -71,7 +71,7 @@ export default function ServicoDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id_status_atual: novoStatusId,
-          observacao_mudanca_status: observacaoMudancaStatus || `Status alterado para ${statusDisponiveis.find(s => s.id_status_servico === novoStatusId)?.nome_status}`
+          observacao_mudanca_status: observacaoMudancaStatus || `Status alterado para ${statusDisponiveis.find(s=>s.id_status_servico === novoStatusId)?.nome_status}`
         }),
       });
       if (!response.ok) {
@@ -99,29 +99,29 @@ export default function ServicoDetailPage() {
 
   const handleDeleteServico = async () => {
     if (!servicoId || !window.confirm("Tem certeza que deseja excluir esta Ordem de Serviço? Esta ação não pode ser desfeita e removerá todo o histórico associado.")) {
-      return;
+        return;
     }
     setIsLoading(true); // Reutilizar isLoading para indicar operação
     setError(null);
     try {
-      const response = await fetch(`/api/servicos/${servicoId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Falha ao excluir a Ordem de Serviço.");
-      }
-      alert("Ordem de Serviço excluída com sucesso!");
-      router.push("/servicos");
+        const response = await fetch(`/api/servicos/${servicoId}`, {
+            method: "DELETE",
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Falha ao excluir a Ordem de Serviço.");
+        }
+        alert("Ordem de Serviço excluída com sucesso!");
+        router.push("/servicos");
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-        console.error("Erro ao excluir Ordem de Serviço:", err);
-      } else {
-        setError("Erro desconhecido ao excluir Ordem de Serviço.");
-        console.error("Erro desconhecido ao excluir Ordem de Serviço:", err);
-      }
-      setIsLoading(false);
+        if (err instanceof Error) {
+            setError(err.message);
+            console.error("Erro ao excluir Ordem de Serviço:", err);
+        } else {
+            setError("Erro desconhecido ao excluir Ordem de Serviço.");
+            console.error("Erro desconhecido ao excluir Ordem de Serviço:", err);
+        }
+        setIsLoading(false);
     }
   };
 
@@ -135,18 +135,18 @@ export default function ServicoDetailPage() {
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Detalhes da Ordem de Serviço</h1>
-            <p className="text-gray-500">OS: {servico.id_servico?.substring(0, 12)}...</p>
+            <p className="text-gray-500">OS: {servico.id_servico?.substring(0,12)}...</p>
           </div>
           <div className="flex space-x-2">
             <Link href={`/servicos/${servicoId}/editar`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Editar OS
             </Link>
             <button
-              onClick={handleDeleteServico}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-              disabled={isLoading || isUpdatingStatus}
+                onClick={handleDeleteServico}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                disabled={isLoading || isUpdatingStatus}
             >
-              Excluir OS
+                Excluir OS
             </button>
           </div>
         </div>
@@ -187,12 +187,12 @@ export default function ServicoDetailPage() {
         )}
 
         {(servico.valor_servico || servico.valor_pecas || servico.valor_mao_de_obra) && (
-          <div className="mb-6 bg-gray-50 p-4 rounded-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Valores</h2>
-            {servico.valor_pecas !== null && <p className="text-black"><strong>Valor das Peças:</strong> R$ {servico.valor_pecas?.toFixed(2)}</p>}
-            {servico.valor_mao_de_obra !== null && <p className="text-black"><strong>Valor da Mão de Obra:</strong> R$ {servico.valor_mao_de_obra?.toFixed(2)}</p>}
-            {servico.valor_servico !== null && <p className="text-black"><strong>Valor Total do Serviço:</strong> R$ {servico.valor_servico?.toFixed(2)}</p>}
-          </div>
+            <div className="mb-6 bg-gray-50 p-4 rounded-md">
+                <h2 className="text-xl font-semibold text-gray-700 mb-2">Valores</h2>
+                {servico.valor_pecas !== null && <p className="text-black"><strong>Valor das Peças:</strong> R$ {servico.valor_pecas?.toFixed(2)}</p>}
+                {servico.valor_mao_de_obra !== null && <p className="text-black"><strong>Valor da Mão de Obra:</strong> R$ {servico.valor_mao_de_obra?.toFixed(2)}</p>}
+                {servico.valor_servico !== null && <p className="text-black"><strong>Valor Total do Serviço:</strong> R$ {servico.valor_servico?.toFixed(2)}</p>}
+            </div>
         )}
 
         {servico.descricao_solucao && (
@@ -213,32 +213,32 @@ export default function ServicoDetailPage() {
           <h2 className="text-xl font-semibold text-gray-700 mb-2">Atualizar Status do Serviço</h2>
           <div className="flex flex-col sm:flex-row gap-2 items-end">
             <div className="flex-grow">
-              <label htmlFor="novo_status" className="block text-sm font-medium text-gray-700">Novo Status</label>
-              <select
-                id="novo_status"
-                value={novoStatusId}
-                onChange={(e) => setNovoStatusId(e.target.value)}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-                disabled={isUpdatingStatus}
-              >
-                {statusDisponiveis.map(status => (
-                  <option key={status.id_status_servico} value={status.id_status_servico}>
-                    {status.nome_status}
-                  </option>
-                ))}
-              </select>
+                <label htmlFor="novo_status" className="block text-sm font-medium text-gray-700">Novo Status</label>
+                <select
+                    id="novo_status"
+                    value={novoStatusId}
+                    onChange={(e) => setNovoStatusId(e.target.value)}
+                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    disabled={isUpdatingStatus}
+                >
+                    {statusDisponiveis.map(status => (
+                    <option key={status.id_status_servico} value={status.id_status_servico} className="bg-black">
+                        {status.nome_status}
+                    </option>
+                    ))}
+                </select>
             </div>
             <div className="flex-grow">
-              <label htmlFor="observacao_mudanca_status" className="block text-sm font-medium text-gray-700">Observação (Opcional)</label>
-              <input
-                type="text"
-                id="observacao_mudanca_status"
-                value={observacaoMudancaStatus}
-                onChange={(e) => setObservacaoMudancaStatus(e.target.value)}
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-                disabled={isUpdatingStatus}
-                placeholder="Ex: Aguardando peça"
-              />
+                <label htmlFor="observacao_mudanca_status" className="block text-sm font-medium text-gray-700">Observação (Opcional)</label>
+                <input
+                    type="text"
+                    id="observacao_mudanca_status"
+                    value={observacaoMudancaStatus}
+                    onChange={(e) => setObservacaoMudancaStatus(e.target.value)}
+                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+                    disabled={isUpdatingStatus}
+                    placeholder="Ex: Aguardando peça"
+                />
             </div>
             <button
               onClick={handleStatusUpdate}
@@ -275,14 +275,14 @@ export default function ServicoDetailPage() {
         </div>
         <div className="flex justify-between items-center pt-4">
           <div className="space-x-3">
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
-            // disabled={isSubmitting}
-            >
-              Cancelar
-            </button>
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
+                // disabled={isSubmitting}
+              >
+                Cancelar
+              </button>
           </div>
         </div>
       </div>

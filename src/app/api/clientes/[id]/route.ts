@@ -26,8 +26,8 @@ const clienteUpdateSchema = z.object({
   ativo: z.boolean().optional(),
 });
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const cliente = await prisma.cliente.findUnique({
@@ -44,8 +44,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const body = await request.json();
@@ -89,7 +89,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Lógica para limpar campos específicos se o tipo de pessoa mudar
-    const finalData: Record<string, unknown> = { ...data };
+    let finalData: any = { ...data };
     if (data.tipo_pessoa && data.tipo_pessoa !== clienteExistente.tipo_pessoa) {
       if (data.tipo_pessoa === "FISICA") {
         finalData.razao_social = null;
@@ -118,8 +118,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const id_cliente = (await params).id;
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const id_cliente = params.id;
 
   try {
     const servicosCount = await prisma.servico.count({

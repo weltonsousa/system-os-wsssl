@@ -1,34 +1,62 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+import { Login } from "../login";
+import { UserRepositoryMemory } from "/login/UserRepositoryMemory";
+import bcrypt from "bcryptjs";
 
-export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
-
-  const user = await prisma.user.findUnique({ where: { email } });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return NextResponse.json({ error: 'Credenciais inválidas' }, { status: 401 });
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+      email: string;
+      name: string;
+    };
   }
 
-  const token = jwt.sign(
-    { id: user.id, name: user.name, email: user.email },
-    JWT_SECRET,
-    { expiresIn: '1d' }
-  );
 
-  const response = NextResponse.json({ message: 'Login bem-sucedido' });
+  const handler: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
+    session: {
+      strategy: "jwt",
+    },
+    providers: [
+      CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+          email: { label: "Email", type: "email", placeholder: "email@example.com" },
+          password: { label: "Password", type: "password" },
+        },
+        async authorize(credentials) {
+          if (!credentials?.email || !credentials.password) {
+            throw new Error("Email e senha são obrigatórios.");
+          }
 
-  response.cookies.set('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24,
-  });
+          const user = await sessionStorage.user.findUnique({
+            where: { email: credentials.email },
+          });
 
-  return response;
-}
+          if (!user) {
+            throw new Error("Usuário não encontrado.");
+          }
+
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+
+          if (!isValid) {
+            throw new Error("Senha incorreta.");
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        },
+      }),
+    ],
+    pages: {
+      signIn: "/login",
+    },
+  };
+
+  export { handler as GET, handler as POST };
