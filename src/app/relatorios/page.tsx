@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { StatusServico, TipoPessoa, Servico } from "@/types";
+import { useAlert } from "@/components/ui/AlertContext";
 
 async function fetchStatusServico() {
   const res = await fetch("/api/status-servico");
@@ -17,7 +18,7 @@ async function fetchStatusServico() {
 export default function RelatoriosPage() {
   const [statusServicos, setStatusServicos] = useState<StatusServico[]>([]);
   const [loadingStatus, setLoadingStatus] = useState(true);
-
+  const { showError } = useAlert();
   // Filtros para Relatório de Serviços por Status
   const [filtroStatusId, setFiltroStatusId] = useState("");
   const [filtroDataInicioServicos, setFiltroDataInicioServicos] = useState("");
@@ -66,7 +67,7 @@ export default function RelatoriosPage() {
     } else if (tipoRelatorio === "faturamento") {
       url = "/api/relatorios/faturamento";
       if (!filtroDataInicioFaturamento || !filtroDataFimFaturamento) {
-        alert("Datas de início e fim são obrigatórias para o relatório de faturamento.");
+        showError("Datas de início e fim são obrigatórias para o relatório de faturamento.");
         return;
       }
       params.append("data_inicio", new Date(filtroDataInicioFaturamento).toISOString());
@@ -159,7 +160,7 @@ export default function RelatoriosPage() {
       const params = new URLSearchParams();
       params.append("formato", "json");
       if (!filtroDataInicioFaturamento || !filtroDataFimFaturamento) {
-        alert("Datas de início e fim são obrigatórias para o relatório de faturamento.");
+        showError("Datas de início e fim são obrigatórias para o relatório de faturamento.");
         setLoadingResultadoFaturamento(false);
         return;
       }

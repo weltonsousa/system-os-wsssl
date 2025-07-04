@@ -7,6 +7,7 @@ import { z } from "zod";
 import { TipoServico } from "@prisma/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAlert } from "@/components/ui/AlertContext";
 
 const tipoServicoFormSchema = z.object({
   nome_tipo_servico: z.string().min(1, "Tipo de serviço é obrigatório"),
@@ -28,14 +29,14 @@ export default function TipoServicoDetailPage() {
   const params = useParams();
   const router = useRouter();
   const tipoServicoId = params.id as string;
-
+  const { showSuccess } = useAlert();
   const [tipoServico, setTipoServico] = useState<TipoServico>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-   const {
+  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -47,28 +48,28 @@ export default function TipoServicoDetailPage() {
   useEffect(() => {
     if (tipoServicoId) {
       setIsLoading(true);
-        fetchTipoServico(tipoServicoId)
+      fetchTipoServico(tipoServicoId)
         .then(tipoServicoData => {
-        if (tipoServicoData) {
-          setTipoServico(tipoServicoData);
-        } else {
-          setError("Tipo de Serviço não encontrado.");
-        }
-      }).catch(err => {
-        console.error(err);
-        setError("Erro ao carregar dados tipo de serviço.");
-      }).finally(() => setIsLoading(false));
+          if (tipoServicoData) {
+            setTipoServico(tipoServicoData);
+          } else {
+            setError("Tipo de Serviço não encontrado.");
+          }
+        }).catch(err => {
+          console.error(err);
+          setError("Erro ao carregar dados tipo de serviço.");
+        }).finally(() => setIsLoading(false));
     }
   }, [tipoServicoId, reset]);
 
   useEffect(() => {
-  if (tipoServico) {
-    reset({
-      nome_tipo_servico: tipoServico.nome_tipo_servico,
-      descricao: tipoServico.descricao?? "",
-    });
-  }
-}, [tipoServico, reset]);
+    if (tipoServico) {
+      reset({
+        nome_tipo_servico: tipoServico.nome_tipo_servico,
+        descricao: tipoServico.descricao ?? "",
+      });
+    }
+  }, [tipoServico, reset]);
 
 
   const onSubmit: SubmitHandler<TipoServicoFormData> = async (data) => {
@@ -86,7 +87,7 @@ export default function TipoServicoDetailPage() {
       }
       router.push("/configuracao/tipos-servico/");
 
-      } catch (err: unknown) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
         console.error("Erro ao atualizar tipo de serviço:", err);
@@ -113,7 +114,7 @@ export default function TipoServicoDetailPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Falha ao excluir a TIpo de Serviço.");
       }
-      alert("Ordem de Serviço excluída com sucesso!");
+      showSuccess("Tipo de Serviço excluído com sucesso!");
       router.push("/configuracao");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -140,7 +141,7 @@ export default function TipoServicoDetailPage() {
         <div>
           <label htmlFor="nome_tipo_servico" className="block text-sm font-medium text-gray-700">Nome</label>
           <input type="text" id="nome_tipo_servico" {...register("nome_tipo_servico")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-           {errors.nome_tipo_servico && <p className="text-red-500 text-xs mt-1">{errors.nome_tipo_servico.message}</p>}
+          {errors.nome_tipo_servico && <p className="text-red-500 text-xs mt-1">{errors.nome_tipo_servico.message}</p>}
         </div>
         <div>
           <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>
