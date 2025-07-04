@@ -1,4 +1,5 @@
 "use client";
+import { useAlert } from "@/components/ui/AlertContext";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,7 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
+  const { showError } = useAlert();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const res = await signIn("credentials", {
@@ -18,7 +19,7 @@ export default function Login() {
     if (res?.ok) {
       router.push("/painel");
     } else {
-      alert("Login falhou");
+      showError("Login ou senha inválidos");
     }
   };
 

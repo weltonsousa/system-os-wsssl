@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Servico, StatusServico } from "@/types";
 import Link from "next/link";
+import { useAlert } from "@/components/ui/AlertContext";
 
 async function fetchServico(id: string) {
   const res = await fetch(`/api/servicos/${id}`);
@@ -36,6 +37,7 @@ export default function ServicoDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const { showSuccess, showError } = useAlert();
 
   useEffect(() => {
     if (servicoId) {
@@ -46,7 +48,7 @@ export default function ServicoDetailPage() {
       ]).then(([servicoData, statusData]) => {
         if (servicoData) {
           setServico(servicoData);
-          setNovoStatusId(servicoData.id_status_atual); // Pre-seleciona o status atual
+          setNovoStatusId(servicoData.id_status_atual);
         } else {
           setError("Serviço não encontrado.");
         }
@@ -60,7 +62,7 @@ export default function ServicoDetailPage() {
 
   const handleStatusUpdate = async () => {
     if (!servico || !novoStatusId || novoStatusId === servico.id_status_atual) {
-      alert("Selecione um novo status diferente do atual.");
+      showError("Selecione um novo status diferente do atual.");
       return;
     }
     setIsUpdatingStatus(true);
@@ -83,7 +85,7 @@ export default function ServicoDetailPage() {
       // Refetch para pegar o histórico atualizado
       fetchServico(servicoId).then(data => setServico(data));
       setObservacaoMudancaStatus(""); // Limpa observação
-      alert("Status atualizado com sucesso!");
+      showSuccess("Status atualizado com sucesso!");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -111,7 +113,7 @@ export default function ServicoDetailPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Falha ao excluir a Ordem de Serviço.");
       }
-      alert("Ordem de Serviço excluída com sucesso!");
+      showSuccess("Ordem de Serviço excluída com sucesso!");
       router.push("/servicos");
     } catch (err: unknown) {
       if (err instanceof Error) {

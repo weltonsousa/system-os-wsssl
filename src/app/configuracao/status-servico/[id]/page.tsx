@@ -7,6 +7,7 @@ import { z } from "zod";
 import { StatusServico } from "@prisma/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAlert } from "@/components/ui/AlertContext";
 
 const statusServicoFormSchema = z.object({
   nome_status: z.string().min(1, "Tipo de Status é obrigatório"),
@@ -28,14 +29,14 @@ export default function StatusServicoDetailPage() {
   const params = useParams();
   const router = useRouter();
   const statusServicoId = params.id as string;
-
+  const { showSuccess } = useAlert();
   const [statusServico, setStatusServico] = useState<StatusServico>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-   const {
+  const {
     register,
     handleSubmit,
     formState: { errors },
@@ -47,28 +48,28 @@ export default function StatusServicoDetailPage() {
   useEffect(() => {
     if (statusServicoId) {
       setIsLoading(true);
-        fetchStatusServico(statusServicoId)
+      fetchStatusServico(statusServicoId)
         .then(statusServicoData => {
-        if (statusServicoData) {
-          setStatusServico(statusServicoData);
-        } else {
-          setError("Tipo de Status não encontrado.");
-        }
-      }).catch(err => {
-        console.error(err);
-        setError("Erro ao carregar dados tipo de Status.");
-      }).finally(() => setIsLoading(false));
+          if (statusServicoData) {
+            setStatusServico(statusServicoData);
+          } else {
+            setError("Tipo de Status não encontrado.");
+          }
+        }).catch(err => {
+          console.error(err);
+          setError("Erro ao carregar dados tipo de Status.");
+        }).finally(() => setIsLoading(false));
     }
   }, [statusServicoId, reset]);
 
   useEffect(() => {
-  if (statusServico) {
-    reset({
-      nome_status: statusServico.nome_status,
-      descricao: statusServico.descricao?? "",
-    });
-  }
-}, [statusServico, reset]);
+    if (statusServico) {
+      reset({
+        nome_status: statusServico.nome_status,
+        descricao: statusServico.descricao ?? "",
+      });
+    }
+  }, [statusServico, reset]);
 
 
   const onSubmit: SubmitHandler<StatusServicoFormData> = async (data) => {
@@ -86,7 +87,7 @@ export default function StatusServicoDetailPage() {
       }
       router.push("/configuracao/status-servico/");
 
-      } catch (err: unknown) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
         console.error("Erro ao atualizar tipo de Status:", err);
@@ -113,7 +114,7 @@ export default function StatusServicoDetailPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Falha ao excluir a TIpo de Status.");
       }
-      alert("Ordem de Status excluída com sucesso!");
+      showSuccess("Ordem de Status excluída com sucesso!");
       router.push("/configuracao");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -140,7 +141,7 @@ export default function StatusServicoDetailPage() {
         <div>
           <label htmlFor="nome_status" className="block text-sm font-medium text-gray-700">Nome</label>
           <input type="text" id="nome_status" {...register("nome_status")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-           {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status.message}</p>}
+          {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status.message}</p>}
         </div>
         <div>
           <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>

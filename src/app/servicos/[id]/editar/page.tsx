@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Servico, Cliente, TipoServico, StatusServico } from "@/types";
 import { useEffect, useState } from "react";
+import { useAlert } from "@/components/ui/AlertContext";
 
 const servicoUpdateFormSchema = z.object({
   id_cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -62,6 +63,7 @@ export default function EditarServicoPage() {
   const router = useRouter();
   const params = useParams();
   const servicoId = params.id as string;
+  const { showSuccess, showError } = useAlert();
 
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
@@ -128,13 +130,14 @@ export default function EditarServicoPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || "Falha ao atualizar serviço");
       }
+      showSuccess("Serviço atualizado com sucesso!");
       router.push(`/servicos/${servicoId}`); // Volta para a página de detalhes
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
+        showError(err.message);
         console.error("Erro ao atualizar serviço:", err);
       } else {
-        setError("Erro desconhecido ao atualizar serviço");
+        showError("Erro desconhecido ao atualizar serviço");
         console.error("Erro desconhecido:", err);
       }
     } finally {
