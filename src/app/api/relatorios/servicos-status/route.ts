@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (formato === "pdf") {
-      const doc = new PDFDocument({ margin: 40, size: 'A4' });
+      const doc = new PDFDocument({ margin: 10, size: 'A4' });
       const buffers: Buffer[] = [];
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => {});
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
 
       // Cabeçalho da tabela
       const tableTop = doc.y;
-      const colWidths = [50, 120, 50, 100, 80, 100, 60];
+      const colWidths = [60, 120, 60, 100, 80, 80, 60];
       const startX = 40;
       const headerBg = '#e2e8f0';
       const rowBg1 = '#fff';
