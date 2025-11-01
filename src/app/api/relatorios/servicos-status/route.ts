@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
         let x = startX;
         const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
         const row = [
-          s.id_servico || '',
+          s.id_servico.substring(0, 10) || '',
           clienteNome || '',
           s.cliente?.tipo_pessoa || '',
           s.tipo_servico?.nome_tipo_servico || '',
