@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
       doc.on('end', () => {});
 
       // Título
-      doc.fontSize(22).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
+      doc.fontSize(20).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
       doc.moveDown(0.5);
       let periodo = '';
       if (data_inicio && data_fim) {
@@ -125,7 +125,7 @@ export async function GET(request: NextRequest) {
         let x = startX;
         const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
         const row = [
-          s.id_servico || '',
+          s.id_servico.substring(0, 10) || '',
           clienteNome || '',
           s.cliente?.tipo_pessoa || '',
           s.tipo_servico?.nome_tipo_servico || '',
@@ -145,7 +145,7 @@ export async function GET(request: NextRequest) {
       y += 10;
 
       // Total de serviços
-      doc.fontSize(14).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
+      doc.fontSize(12).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
         width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
       });
       doc.end();

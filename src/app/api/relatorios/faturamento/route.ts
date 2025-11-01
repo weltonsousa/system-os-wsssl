@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       doc.on('end', () => { });
 
       // Título
-      doc.fontSize(22).fillColor('#1a202c').text('Relatório de Faturamento', { align: 'center', underline: true });
+      doc.fontSize(20).fillColor('#1a202c').text('Relatório de Faturamento', { align: 'center', underline: true });
       doc.moveDown(0.5);
       doc.fontSize(12).fillColor('#333').text(`Período: ${new Date(data_inicio).toLocaleDateString()} a ${new Date(data_fim).toLocaleDateString()}`);
       doc.text(`Tipo de Cliente: ${tipo_pessoa_cliente}`);
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
         let x = startX;
         const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
         const row = [
-          s.id_servico || '',
+          s.id_servico.substring(0, 10) || '',
           s.data_efetiva_saida ? new Date(s.data_efetiva_saida).toLocaleDateString() : '',
           clienteNome || '',
           s.cliente?.tipo_pessoa || '',
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
       y += 10;
 
       // Total em destaque
-      doc.fontSize(14).fillColor('#1a202c').font('Helvetica-Bold').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
+      doc.fontSize(12).fillColor('#1a202c').font('Helvetica-Bold').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
         width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
       });
       doc.end();
