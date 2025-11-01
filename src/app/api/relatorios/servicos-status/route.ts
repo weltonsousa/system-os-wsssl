@@ -76,88 +76,87 @@ export async function GET(request: NextRequest) {
     }
 
     if (formato === "pdf") {
-      const doc = new PDFDocument({ margin: 10, size: 'A4' });
-      const buffers: Buffer[] = [];
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => {});
-
-      // Título
-      doc.fontSize(20).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
-      doc.moveDown(0.5);
-      let periodo = '';
-      if (data_inicio && data_fim) {
-        periodo = `Período: ${new Date(data_inicio).toLocaleDateString()} a ${new Date(data_fim).toLocaleDateString()}`;
-      } else if (data_inicio) {
-        periodo = `A partir de: ${new Date(data_inicio).toLocaleDateString()}`;
-      } else if (data_fim) {
-        periodo = `Até: ${new Date(data_fim).toLocaleDateString()}`;
-      }
-      if (periodo) doc.fontSize(12).fillColor('#333').text(periodo);
-      if (status_id) doc.text(`Status filtrado: ${status_id}`);
-      doc.moveDown(1);
-
-      // Cabeçalho da tabela
-      const tableTop = doc.y;
-      const colWidths = [60, 120, 60, 100, 80, 80, 60];
-      const startX = 40;
-      const headerBg = '#e2e8f0';
-      const rowBg1 = '#fff';
-      const rowBg2 = '#f7fafc';
-      const textColor = '#222';
-      const headerTitles = ['OS', 'Cliente', 'Tipo Pessoa', 'Tipo Serviço', 'Data Entrada', 'Status', 'Valor'];
-
-      // Fundo do cabeçalho
-      doc.rect(startX, tableTop, colWidths.reduce((a, b) => a + b, 0), 22).fill(headerBg);
-      doc.fillColor(textColor).fontSize(11).font('Helvetica');
-      let x = startX;
-      headerTitles.forEach((title, i) => {
-        doc.text(title, x + 4, tableTop + 6, { width: colWidths[i] - 8, align: 'left' });
-        x += colWidths[i];
-      });
-      doc.moveDown();
-
-      // Linhas da tabela
-      let y = tableTop + 22;
-      servicos.forEach((s, idx) => {
-        const bg = idx % 2 === 0 ? rowBg1 : rowBg2;
-        doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 20).fill(bg);
-        doc.fillColor(textColor);
-        let x = startX;
-        const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
-        const row = [
-          s.id_servico.substring(0, 10) || '',
-          clienteNome || '',
-          s.cliente?.tipo_pessoa || '',
-          s.tipo_servico?.nome_tipo_servico || '',
-          s.data_entrada ? new Date(s.data_entrada).toLocaleDateString() : '',
-          s.status_atual?.nome_status || '',
-          s.valor_servico?.toFixed(2) || '0.00',
-        ];
-        row.forEach((cell, i) => {
-          doc.text(cell, x + 4, y + 6, { width: colWidths[i] - 8, align: 'left' });
-          x += colWidths[i];
-        });
-        y += 20;
-      });
-
-      // Linha separadora
-      doc.moveTo(startX, y).lineTo(startX + colWidths.reduce((a, b) => a + b, 0), y).stroke('#cbd5e1');
-      y += 10;
-
-      // Total de serviços
-      doc.fontSize(12).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
-        width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
-      });
-      doc.end();
-
+      const doc = new PDFDocument({ margin: 10, size: 'A4', layout: 'landscape' });
+      
+      // Configurar listeners para capturar o PDF
       const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
         const bufs: Buffer[] = [];
         doc.on('data', (d: Buffer) => bufs.push(d));
         doc.on('end', () => resolve(Buffer.concat(bufs)));
         doc.on('error', reject);
+
+        // Título
+        doc.fontSize(20).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
+        doc.moveDown(0.5);
+        let periodo = '';
+        if (data_inicio && data_fim) {
+          periodo = `Período: ${new Date(data_inicio).toLocaleDateString()} a ${new Date(data_fim).toLocaleDateString()}`;
+        } else if (data_inicio) {
+          periodo = `A partir de: ${new Date(data_inicio).toLocaleDateString()}`;
+        } else if (data_fim) {
+          periodo = `Até: ${new Date(data_fim).toLocaleDateString()}`;
+        }
+        if (periodo) doc.fontSize(12).fillColor('#333').text(periodo);
+        if (status_id) doc.text(`Status filtrado: ${status_id}`);
+        doc.moveDown(1);
+
+        // Cabeçalho da tabela
+        const tableTop = doc.y;
+        const colWidths = [80, 150, 70, 120, 100, 100, 80];
+        const startX = 40;
+        const headerBg = '#e2e8f0';
+        const rowBg1 = '#fff';
+        const rowBg2 = '#f7fafc';
+        const textColor = '#222';
+        const headerTitles = ['OS', 'Cliente', 'Tipo Pessoa', 'Tipo Serviço', 'Data Entrada', 'Status', 'Valor'];
+
+        // Fundo do cabeçalho
+        doc.rect(startX, tableTop, colWidths.reduce((a, b) => a + b, 0), 22).fill(headerBg);
+        doc.fillColor(textColor).fontSize(11).font('Helvetica');
+        let x = startX;
+        headerTitles.forEach((title, i) => {
+          doc.text(title, x + 4, tableTop + 6, { width: colWidths[i] - 8, align: 'left' });
+          x += colWidths[i];
+        });
+        doc.moveDown();
+
+        // Linhas da tabela
+        let y = tableTop + 22;
+        servicos.forEach((s, idx) => {
+          const bg = idx % 2 === 0 ? rowBg1 : rowBg2;
+          doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 20).fill(bg);
+          doc.fillColor(textColor);
+          let x = startX;
+          const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
+          const row = [
+            s.id_servico.substring(0, 10) || '',
+            clienteNome || '',
+            s.cliente?.tipo_pessoa || '',
+            s.tipo_servico?.nome_tipo_servico || '',
+            s.data_entrada ? new Date(s.data_entrada).toLocaleDateString() : '',
+            s.status_atual?.nome_status || '',
+            s.valor_servico?.toFixed(2) || '0.00',
+          ];
+          row.forEach((cell, i) => {
+            doc.text(cell, x + 4, y + 6, { width: colWidths[i] - 8, align: 'left' });
+            x += colWidths[i];
+          });
+          y += 20;
+        });
+
+        // Linha separadora
+        doc.moveTo(startX, y).lineTo(startX + colWidths.reduce((a, b) => a + b, 0), y).stroke('#cbd5e1');
+        y += 10;
+
+        // Total de serviços
+        doc.fontSize(12).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
+          width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
+        });
+        
+        doc.end();
       });
 
-      return new NextResponse(pdfBuffer, {
+      return new NextResponse(new Uint8Array(pdfBuffer), {
         status: 200,
         headers: {
           'Content-Type': 'application/pdf',
