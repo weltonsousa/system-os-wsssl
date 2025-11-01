@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     if (formato === "pdf") {
       // Gerar PDF com pdfkit
-      const doc = new PDFDocument({ margin: 40, size: 'A4' });
+      const doc = new PDFDocument({ margin: 10, size: 'A4' });
       const buffers: Buffer[] = [];
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => { });
