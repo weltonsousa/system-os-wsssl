@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
       doc.on('end', () => {});
 
       // Título
-      doc.fontSize(22).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
+      doc.fontSize(20).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
       doc.moveDown(0.5);
       let periodo = '';
       if (data_inicio && data_fim) {
@@ -145,7 +145,7 @@ export async function GET(request: NextRequest) {
       y += 10;
 
       // Total de serviços
-      doc.fontSize(14).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
+      doc.fontSize(12).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
         width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
       });
       doc.end();

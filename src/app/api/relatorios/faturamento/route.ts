@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       doc.on('end', () => { });
 
       // Título
-      doc.fontSize(22).fillColor('#1a202c').text('Relatório de Faturamento', { align: 'center', underline: true });
+      doc.fontSize(20).fillColor('#1a202c').text('Relatório de Faturamento', { align: 'center', underline: true });
       doc.moveDown(0.5);
       doc.fontSize(12).fillColor('#333').text(`Período: ${new Date(data_inicio).toLocaleDateString()} a ${new Date(data_fim).toLocaleDateString()}`);
       doc.text(`Tipo de Cliente: ${tipo_pessoa_cliente}`);
@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
       y += 10;
 
       // Total em destaque
-      doc.fontSize(14).fillColor('#1a202c').font('Helvetica-Bold').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
+      doc.fontSize(12).fillColor('#1a202c').font('Helvetica-Bold').text(`Total Faturado: R$ ${totalFaturado.toFixed(2)}`, startX, y, {
         width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
       });
       doc.end();
