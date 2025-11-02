@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
 
         // Cabeçalho da tabela
         const tableTop = doc.y;
-        const colWidths = [50, 80, 120, 50, 100, 60];
+        const colWidths = [80, 80, 120, 70, 100, 60];
         const startX = 40;
         const headerBg = '#e2e8f0';
         const rowBg1 = '#fff';
