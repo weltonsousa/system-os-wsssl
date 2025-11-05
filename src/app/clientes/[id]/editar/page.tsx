@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Cliente, TipoPessoa } from "@/types";
 import { useEffect, useState } from "react";
+import { maskCEP, maskCNPJ, maskCPF } from "@/app/utils/utils";
 
 const clienteFormSchema = z.object({
   tipo_pessoa: z.nativeEnum(TipoPessoa),
@@ -246,7 +247,12 @@ export default function EditarClientePage() {
             </div>
             <div>
               <label htmlFor="cpf" className="block text-sm font-medium text-gray-700">CPF</label>
-              <input type="text" id="cpf" {...register("cpf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input type="text" maxLength={14} id="cpf" {...register("cpf")} onChange={(e) => {
+                const masked = maskCPF(e.target.value);
+                e.target.value = masked;
+                register("cpf").onChange(e);
+                setValue("cpf", masked, { shouldValidate: true });
+              }} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
               {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf.message}</p>}
             </div>
           </>
@@ -265,7 +271,12 @@ export default function EditarClientePage() {
             </div>
             <div>
               <label htmlFor="cnpj" className="block text-sm font-medium text-gray-700">CNPJ</label>
-              <input type="text" id="cnpj" {...register("cnpj")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input type="text" maxLength={18} id="cnpj" {...register("cnpj")} onChange={(e) => {
+                const masked = maskCNPJ(e.target.value);
+                e.target.value = masked;
+                register("cnpj").onChange(e);
+                setValue("cnpj", masked, { shouldValidate: true });
+              }} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
               {errors.cnpj && <p className="text-red-500 text-xs mt-1">{errors.cnpj.message}</p>}
             </div>
             <div>
@@ -299,7 +310,12 @@ export default function EditarClientePage() {
         </div>
         <div>
           <label htmlFor="cep" className="block text-sm font-medium text-gray-700">CEP</label>
-          <input type="text" id="cep" {...register("cep")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" id="cep" maxLength={9} {...register("cep")} onChange={(e) => {
+            const masked = maskCEP(e.target.value);
+            e.target.value = masked;
+            register("cep").onChange(e);
+            setValue("cep", masked, { shouldValidate: true });
+          }} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="rua" className="block text-sm font-medium text-gray-700">Rua</label>
