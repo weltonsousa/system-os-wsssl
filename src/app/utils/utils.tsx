@@ -1,4 +1,4 @@
-// Funções de máscara
+// Funções de máscara componentes
 export const maskCPF = (value: string): string => {
   const numbers = value.replace(/\D/g, "");
   if (numbers.length <= 11) {
