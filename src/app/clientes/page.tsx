@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Cliente, PaginatedResponse } from "@/types";
+import { maskCPF, maskPhone, maskCNPJ } from "@/app/utils/utils";
 
 async function fetchClientes(page: number = 1, limit: number = 10, search: string = "") {
   const res = await fetch(`/api/clientes?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
@@ -85,9 +86,9 @@ export default function ClientesPage() {
               {clientes.map((cliente) => (
                 <tr key={cliente.id_cliente} className="border-b hover:bg-gray-50">
                   <td className="py-3 px-4 text-black">{cliente.tipo_pessoa === "FISICA" ? cliente.nome_completo : cliente.razao_social}</td>
-                  <td className="py-3 px-4 text-black">{cliente.tipo_pessoa === "FISICA" ? cliente.cpf : cliente.cnpj}</td>
+                  <td className="py-3 px-4 text-black">{cliente.tipo_pessoa === "FISICA" ? maskCPF(cliente.cpf!) : maskCNPJ(cliente.cnpj!)}</td>
                   <td className="py-3 px-4 text-black">{cliente.email}</td>
-                  <td className="py-3 px-4 text-black">{cliente.telefone_principal}</td>
+                  <td className="py-3 px-4 text-black">{maskPhone(cliente.telefone_principal)}</td>
                   <td className="py-3 px-4 text-black">
                     <Link href={`/clientes/${cliente.id_cliente}/editar`} className="text-blue-500 hover:underline mr-2">
                       Editar

@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
         doc.on('error', reject);
 
         // Título
-        doc.fontSize(20).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
+        doc.fontSize(18).fillColor('#1a202c').text('Relatório de Serviços por Status', { align: 'center', underline: true });
         doc.moveDown(0.5);
         let periodo = '';
         if (data_inicio && data_fim) {
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
         } else if (data_fim) {
           periodo = `Até: ${new Date(data_fim).toLocaleDateString()}`;
         }
-        if (periodo) doc.fontSize(12).fillColor('#333').text(periodo);
+        if (periodo) doc.fontSize(10).fillColor('#333').text(periodo);
         if (status_id) doc.text(`Status filtrado: ${status_id}`);
         doc.moveDown(1);
 
@@ -111,20 +111,20 @@ export async function GET(request: NextRequest) {
         const headerTitles = ['OS', 'Cliente', 'Tipo Pessoa', 'Tipo Serviço', 'Data Entrada', 'Status', 'Valor'];
 
         // Fundo do cabeçalho
-        doc.rect(startX, tableTop, colWidths.reduce((a, b) => a + b, 0), 22).fill(headerBg);
-        doc.fillColor(textColor).fontSize(11).font('Helvetica');
+        doc.rect(startX, tableTop, colWidths.reduce((a, b) => a + b, 0), 18).fill(headerBg);
+        doc.fillColor(textColor).fontSize(9).font('Helvetica');
         let x = startX;
         headerTitles.forEach((title, i) => {
-          doc.text(title, x + 4, tableTop + 6, { width: colWidths[i] - 8, align: 'left' });
+          doc.text(title, x + 4, tableTop + 4, { width: colWidths[i] - 8, align: 'left' });
           x += colWidths[i];
         });
         doc.moveDown();
 
         // Linhas da tabela
-        let y = tableTop + 22;
+        let y = tableTop + 18;
         servicos.forEach((s, idx) => {
           const bg = idx % 2 === 0 ? rowBg1 : rowBg2;
-          doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 20).fill(bg);
+          doc.rect(startX, y, colWidths.reduce((a, b) => a + b, 0), 15).fill(bg);
           doc.fillColor(textColor);
           let x = startX;
           const clienteNome = s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social;
@@ -138,10 +138,10 @@ export async function GET(request: NextRequest) {
             s.valor_servico?.toFixed(2) || '0.00',
           ];
           row.forEach((cell, i) => {
-            doc.text(cell, x + 4, y + 6, { width: colWidths[i] - 8, align: 'left' });
+            doc.text(cell, x + 4, y + 4, { width: colWidths[i] - 8, align: 'left' });
             x += colWidths[i];
           });
-          y += 20;
+          y += 15;
         });
 
         // Linha separadora
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest) {
         y += 10;
 
         // Total de serviços
-        doc.fontSize(12).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
+        doc.fontSize(10).fillColor('#1a202c').font('Helvetica').text(`Total de Serviços: ${servicos.length}`, startX, y, {
           width: colWidths.reduce((a, b) => a + b, 0), align: 'right'
         });
         

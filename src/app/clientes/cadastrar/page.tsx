@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { TipoPessoa } from "@/types"; //Cliente,
 import { useEffect, useState } from "react";
+import { maskCPF, maskPhone, maskCEP, maskCNPJ } from "@/app/utils/utils";
 
 const clienteFormSchema = z.object({
   tipo_pessoa: z.nativeEnum(TipoPessoa),
@@ -102,6 +103,13 @@ export default function CadastrarClientePage() {
     }
   }, [watchedTipoPessoa, setValue]);
 
+  // Desestruturar register para campos com máscara
+  const cpfRegister = register("cpf");
+  const cnpjRegister = register("cnpj");
+  const telefonePrincipalRegister = register("telefone_principal");
+  const telefoneSecundarioRegister = register("telefone_secundario");
+  const cepRegister = register("cep");
+
   const onSubmit: SubmitHandler<ClienteFormData> = async (data) => {
     setIsSubmitting(true);
     setError(null);
@@ -151,7 +159,20 @@ export default function CadastrarClientePage() {
             </div>
             <div>
               <label htmlFor="cpf" className="block text-sm font-medium text-black">CPF</label>
-              <input type="text" id="cpf" {...register("cpf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input
+                type="text"
+                id="cpf"
+                {...cpfRegister}
+                onChange={(e) => {
+                  const masked = maskCPF(e.target.value);
+                  e.target.value = masked;
+                  cpfRegister.onChange(e);
+                  setValue("cpf", masked, { shouldValidate: true });
+                }}
+                maxLength={14}
+                placeholder="000.000.000-00"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+              />
               {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf.message}</p>}
             </div>
           </>
@@ -170,7 +191,20 @@ export default function CadastrarClientePage() {
             </div>
             <div>
               <label htmlFor="cnpj" className="block text-sm font-medium text-black">CNPJ</label>
-              <input type="text" id="cnpj" {...register("cnpj")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input
+                type="text"
+                id="cnpj"
+                {...cnpjRegister}
+                onChange={(e) => {
+                  const masked = maskCNPJ(e.target.value);
+                  e.target.value = masked;
+                  cnpjRegister.onChange(e);
+                  setValue("cnpj", masked, { shouldValidate: true });
+                }}
+                maxLength={18}
+                placeholder="00.000.000/0000-00"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+              />
               {errors.cnpj && <p className="text-red-500 text-xs mt-1">{errors.cnpj.message}</p>}
             </div>
             <div>
@@ -190,21 +224,66 @@ export default function CadastrarClientePage() {
 
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-black">Email</label>
-          <input type="email" id="email" {...register("email")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input
+            type="email"
+            id="email"
+            {...register("email")}
+            placeholder="exemplo@email.com"
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+          />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
         <div>
           <label htmlFor="telefone_principal" className="block text-sm font-medium text-black">Telefone Principal</label>
-          <input type="tel" id="telefone_principal" {...register("telefone_principal")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input
+            type="tel"
+            id="telefone_principal"
+            {...telefonePrincipalRegister}
+            onChange={(e) => {
+              const masked = maskPhone(e.target.value);
+              e.target.value = masked;
+              telefonePrincipalRegister.onChange(e);
+              setValue("telefone_principal", masked, { shouldValidate: true });
+            }}
+            maxLength={15}
+            placeholder="(00) 00000-0000"
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+          />
           {errors.telefone_principal && <p className="text-red-500 text-xs mt-1">{errors.telefone_principal.message}</p>}
         </div>
         <div>
           <label htmlFor="telefone_secundario" className="block text-sm font-medium text-black">Telefone Secundário</label>
-          <input type="tel" id="telefone_secundario" {...register("telefone_secundario")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input
+            type="tel"
+            id="telefone_secundario"
+            {...telefoneSecundarioRegister}
+            onChange={(e) => {
+              const masked = maskPhone(e.target.value);
+              e.target.value = masked;
+              telefoneSecundarioRegister.onChange(e);
+              setValue("telefone_secundario", masked, { shouldValidate: true });
+            }}
+            maxLength={15}
+            placeholder="(00) 00000-0000"
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+          />
         </div>
         <div>
           <label htmlFor="cep" className="block text-sm font-medium text-black">CEP</label>
-          <input type="text" id="cep" {...register("cep")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input
+            type="text"
+            id="cep"
+            {...cepRegister}
+            onChange={(e) => {
+              const masked = maskCEP(e.target.value);
+              e.target.value = masked;
+              cepRegister.onChange(e);
+              setValue("cep", masked, { shouldValidate: true });
+            }}
+            maxLength={9}
+            placeholder="00000-000"
+            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+          />
         </div>
         <div>
           <label htmlFor="rua" className="block text-sm font-medium text-black">Rua</label>
