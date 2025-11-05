@@ -154,7 +154,7 @@ export default function CadastrarClientePage() {
           <>
             <div>
               <label htmlFor="nome_completo" className="block text-sm font-medium text-black">Nome Completo</label>
-              <input type="text" id="nome_completo" {...register("nome_completo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input type="text" maxLength={100} id="nome_completo" {...register("nome_completo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
               {errors.nome_completo && <p className="text-red-500 text-xs mt-1">{errors.nome_completo.message}</p>}
             </div>
             <div>
@@ -182,7 +182,7 @@ export default function CadastrarClientePage() {
           <>
             <div>
               <label htmlFor="razao_social" className="block text-sm font-medium text-black">Razão Social</label>
-              <input type="text" id="razao_social" {...register("razao_social")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+              <input type="text" maxLength={100} id="razao_social" {...register("razao_social")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
               {errors.razao_social && <p className="text-red-500 text-xs mt-1">{errors.razao_social.message}</p>}
             </div>
             <div>
@@ -287,27 +287,27 @@ export default function CadastrarClientePage() {
         </div>
         <div>
           <label htmlFor="rua" className="block text-sm font-medium text-black">Rua</label>
-          <input type="text" id="rua" {...register("rua")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={100} id="rua" {...register("rua")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="numero" className="block text-sm font-medium text-black">Número</label>
-          <input type="text" id="numero" {...register("numero")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={10} id="numero" {...register("numero")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="complemento" className="block text-sm font-medium text-black">Complemento</label>
-          <input type="text" id="complemento" {...register("complemento")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={100} id="complemento" {...register("complemento")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="bairro" className="block text-sm font-medium text-black">Bairro</label>
-          <input type="text" id="bairro" {...register("bairro")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={100} id="bairro" {...register("bairro")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="cidade" className="block text-sm font-medium text-black">Cidade</label>
-          <input type="text" id="cidade" {...register("cidade")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={100} id="cidade" {...register("cidade")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="estado_uf" className="block text-sm font-medium text-black">Estado (UF)</label>
-          <input type="text" id="estado_uf" {...register("estado_uf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+          <input type="text" maxLength={2} id="estado_uf" {...register("estado_uf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
         </div>
         <div>
           <label htmlFor="observacoes" className="block text-sm font-medium text-black">Observações</label>
