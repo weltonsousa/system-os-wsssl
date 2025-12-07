@@ -49,3 +49,4 @@ prisma/dev.db
 prisma/schema.prisma
 dev.db
 src/components/ui/README.md
+env.zip
