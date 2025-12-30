@@ -17,6 +17,15 @@ export default function Login() {
       password,
     });
     if (res?.ok) {
+      // Após login bem-sucedido via NextAuth, sincronizar com token JWT
+      // para compatibilidade com o middleware
+      try {
+        await fetch("/api/auth/sync-token", {
+          method: "POST",
+        });
+      } catch (error) {
+        console.error("Erro ao sincronizar token JWT:", error);
+      }
       router.push("/painel");
     } else {
       showError("Login ou senha inválidos");
