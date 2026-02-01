@@ -1,22 +1,39 @@
 "use client";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
-import { signOut, useSession } from 'next-auth/react';
-
+import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
 
 const Navbar = () => {
-  const { data: session, status } = useSession();
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase]);
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
+    await supabase.auth.signOut();
     router.push("/login");
+    router.refresh();
   };
 
   return (
     <nav className="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
       <div>
-        {session?.user?.name ? (
+        {user ? (
           <>
             <Link href="/painel" className="font-bold text-lg">WS Service Solutions</Link>
           </>
@@ -28,13 +45,13 @@ const Navbar = () => {
         )}
       </div>
       <div className="flex items-center gap-4">
-        {status === "authenticated" && session?.user ? (
+        {user ? (
           <>
             <Link href="/clientes" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Clientes</Link>
             <Link href="/servicos" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Serviços</Link>
             <Link href="/relatorios" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Relatórios</Link>
             <Link href="/configuracao" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-normal py-2 px-4 rounded">Configuração</Link>
-            <span>Olá, {session.user.name}</span>
+            <span>Olá, {user.email}</span>
             <button
               onClick={handleLogout}
               className="inline-block bg-red-500 hover:bg-red-600 text-white font-normal py-2 px-4 rounded"

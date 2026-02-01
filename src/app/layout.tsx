@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import './globals.css';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import { AlertProvider } from "@/components/ui/AlertContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,15 +21,13 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${inter} flex flex-col min-h-screen`}>
-        <SessionProviderWrapper>
-          <AlertProvider>
-            <Navbar />
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-            <Footer />
-          </AlertProvider>
-        </SessionProviderWrapper>
+        <AlertProvider>
+          <Navbar />
+          <main className="flex-grow container mx-auto px-4 py-8">
+            {children}
+          </main>
+          <Footer />
+        </AlertProvider>
       </body>
     </html>
   );

@@ -1,12 +1,15 @@
-import { getServerSession } from "next-auth";
-import { GET as authHandler } from "../api/auth/[...nextauth]/route";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 import Link from 'next/link';
 
 export default async function PainelPage() {
-  const session = await getServerSession(authHandler);
-  if (!session) redirect("/login");
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">

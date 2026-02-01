@@ -1,34 +1,44 @@
 "use client";
 import { useAlert } from "@/components/ui/AlertContext";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { showError } = useAlert();
+  const supabase = createClient();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-    if (res?.ok) {
-      // Após login bem-sucedido via NextAuth, sincronizar com token JWT
-      // para compatibilidade com o middleware
-      try {
-        await fetch("/api/auth/sync-token", {
-          method: "POST",
-        });
-      } catch (error) {
-        console.error("Erro ao sincronizar token JWT:", error);
+    setIsLoading(true);
+
+    if (!email || !password) {
+      showError("Por favor, preencha todos os campos.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
       }
+
       router.push("/painel");
-    } else {
+      router.refresh();
+    } catch (error) {
+      console.error("Login Error:", error);
       showError("Login ou senha inválidos");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,15 +53,37 @@ export default function Login() {
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Email
             </label>
-            <input type="email" placeholder="seu@email.com" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              type="email"
+              placeholder="seu@email.com"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={isLoading}
+            />
           </div>
           <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               Senha
             </label>
-            <input type="password" placeholder="Senha" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input
+              type="password"
+              placeholder="Senha"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={isLoading}
+            />
           </div>
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200">Entrar</button>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+          >
+            {isLoading ? 'Entrando...' : 'Entrar'}
+          </button>
         </form>
       </div>
     </div>
