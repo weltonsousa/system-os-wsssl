@@ -22,7 +22,7 @@ export default function RegisterPage() {
       const { createClient } = await import("@/utils/supabase/client");
       const supabase = createClient();
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
