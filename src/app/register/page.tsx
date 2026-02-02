@@ -14,18 +14,35 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error || "Erro ao registrar");
-      return;
-    }
-    setSuccess("Usuário cadastrado com sucesso! Faça login.");
-    setTimeout(() => router.push("/login"), 1500);
+
+    // try {
+    //   // Import dynamic to avoid initializing client on server if this component was SSR enabled, 
+    //   // but it's "use client" so imports at top are fine. 
+    //   // But we need to import createClient first.
+    //   const { createClient } = await import("@/utils/supabase/client");
+    //   const supabase = createClient();
+
+    //   const { data, error } = await supabase.auth.signUp({
+    //     email,
+    //     password,
+    //     options: {
+    //       data: {
+    //         full_name: name,
+    //       },
+    //     },
+    //   });
+
+    //   if (error) {
+    //     throw error;
+    //   }
+
+    //   setSuccess("Conta criada com sucesso! Verifique seu email para confirmar.");
+    //   // Se auto confirm não estiver ativado, talvez não logue direto.
+    //   // Se estiver ativado, pode logar.
+    //   setTimeout(() => router.push("/login"), 3000);
+    // } catch (err: any) {
+    //   setError(err.message || "Erro ao registrar");
+    // }
   };
 
   return (
