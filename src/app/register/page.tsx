@@ -15,34 +15,34 @@ export default function RegisterPage() {
     setError("");
     setSuccess("");
 
-    try {
-      // Import dynamic to avoid initializing client on server if this component was SSR enabled, 
-      // but it's "use client" so imports at top are fine. 
-      // But we need to import createClient first.
-      const { createClient } = await import("@/utils/supabase/client");
-      const supabase = createClient();
+    // try {
+    //   // Import dynamic to avoid initializing client on server if this component was SSR enabled, 
+    //   // but it's "use client" so imports at top are fine. 
+    //   // But we need to import createClient first.
+    //   const { createClient } = await import("@/utils/supabase/client");
+    //   const supabase = createClient();
 
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: name,
-          },
-        },
-      });
+    //   const { data, error } = await supabase.auth.signUp({
+    //     email,
+    //     password,
+    //     options: {
+    //       data: {
+    //         full_name: name,
+    //       },
+    //     },
+    //   });
 
-      if (error) {
-        throw error;
-      }
+    //   if (error) {
+    //     throw error;
+    //   }
 
-      setSuccess("Conta criada com sucesso! Verifique seu email para confirmar.");
-      // Se auto confirm não estiver ativado, talvez não logue direto.
-      // Se estiver ativado, pode logar.
-      setTimeout(() => router.push("/login"), 3000);
-    } catch (err: any) {
-      setError(err.message || "Erro ao registrar");
-    }
+    //   setSuccess("Conta criada com sucesso! Verifique seu email para confirmar.");
+    //   // Se auto confirm não estiver ativado, talvez não logue direto.
+    //   // Se estiver ativado, pode logar.
+    //   setTimeout(() => router.push("/login"), 3000);
+    // } catch (err: any) {
+    //   setError(err.message || "Erro ao registrar");
+    // }
   };
 
   return (
