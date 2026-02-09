@@ -134,204 +134,206 @@ export default function CadastrarClientePage() {
   };
 
   return (
-    <div className="container mx-auto p-4 mt-12 bg-neutral-100 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-blue-600">Cadastrar Novo Cliente</h1>
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="tipo_pessoa" className="block text-sm font-medium text-black">Tipo de Pessoa</label>
-          <select
-            id="tipo_pessoa"
-            {...register("tipo_pessoa")}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-black border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
-            <option value={TipoPessoa.FISICA}>Pessoa Física</option>
-            <option value={TipoPessoa.JURIDICA}>Pessoa Jurídica</option>
-          </select>
-        </div>
+    <div className="container mx-auto p-4 mt-8 max-w-3xl">
+      <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm p-6">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">Cadastrar Novo Cliente</h1>
+        {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="tipo_pessoa" className="block text-sm font-medium text-slate-700">Tipo de Pessoa</label>
+            <select
+              id="tipo_pessoa"
+              {...register("tipo_pessoa")}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-slate-900 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value={TipoPessoa.FISICA}>Pessoa Física</option>
+              <option value={TipoPessoa.JURIDICA}>Pessoa Jurídica</option>
+            </select>
+          </div>
 
-        {tipoPessoa === TipoPessoa.FISICA && (
-          <>
-            <div>
-              <label htmlFor="nome_completo" className="block text-sm font-medium text-black">Nome Completo</label>
-              <input type="text" maxLength={100} id="nome_completo" {...register("nome_completo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-              {errors.nome_completo && <p className="text-red-500 text-xs mt-1">{errors.nome_completo.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="cpf" className="block text-sm font-medium text-black">CPF</label>
-              <input
-                type="text"
-                id="cpf"
-                {...cpfRegister}
-                onChange={(e) => {
-                  const masked = maskCPF(e.target.value);
-                  e.target.value = masked;
-                  cpfRegister.onChange(e);
-                  setValue("cpf", masked, { shouldValidate: true });
-                }}
-                maxLength={14}
-                placeholder="000.000.000-00"
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-              />
-              {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf.message}</p>}
-            </div>
-          </>
-        )}
+          {tipoPessoa === TipoPessoa.FISICA && (
+            <>
+              <div>
+                <label htmlFor="nome_completo" className="block text-sm font-medium text-slate-700">Nome Completo</label>
+                <input type="text" maxLength={100} id="nome_completo" {...register("nome_completo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+                {errors.nome_completo && <p className="text-red-500 text-xs mt-1">{errors.nome_completo?.message}</p>}
+              </div>
+              <div>
+                <label htmlFor="cpf" className="block text-sm font-medium text-slate-700">CPF</label>
+                <input
+                  type="text"
+                  id="cpf"
+                  {...cpfRegister}
+                  onChange={(e) => {
+                    const masked = maskCPF(e.target.value);
+                    e.target.value = masked;
+                    cpfRegister.onChange(e);
+                    setValue("cpf", masked, { shouldValidate: true });
+                  }}
+                  maxLength={14}
+                  placeholder="000.000.000-00"
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+                />
+                {errors.cpf && <p className="text-red-500 text-xs mt-1">{errors.cpf?.message}</p>}
+              </div>
+            </>
+          )}
 
-        {tipoPessoa === TipoPessoa.JURIDICA && (
-          <>
-            <div>
-              <label htmlFor="razao_social" className="block text-sm font-medium text-black">Razão Social</label>
-              <input type="text" maxLength={100} id="razao_social" {...register("razao_social")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-              {errors.razao_social && <p className="text-red-500 text-xs mt-1">{errors.razao_social.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="nome_fantasia" className="block text-sm font-medium text-black">Nome Fantasia</label>
-              <input type="text" id="nome_fantasia" {...register("nome_fantasia")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-            </div>
-            <div>
-              <label htmlFor="cnpj" className="block text-sm font-medium text-black">CNPJ</label>
-              <input
-                type="text"
-                id="cnpj"
-                {...cnpjRegister}
-                onChange={(e) => {
-                  const masked = maskCNPJ(e.target.value);
-                  e.target.value = masked;
-                  cnpjRegister.onChange(e);
-                  setValue("cnpj", masked, { shouldValidate: true });
-                }}
-                maxLength={18}
-                placeholder="00.000.000/0000-00"
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-              />
-              {errors.cnpj && <p className="text-red-500 text-xs mt-1">{errors.cnpj.message}</p>}
-            </div>
-            <div>
-              <label htmlFor="inscricao_estadual" className="block text-sm font-medium text-black">Inscrição Estadual</label>
-              <input type="text" id="inscricao_estadual" {...register("inscricao_estadual")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-            </div>
-            <div>
-              <label htmlFor="inscricao_municipal" className="block text-sm font-medium text-black">Inscrição Municipal</label>
-              <input type="text" id="inscricao_municipal" {...register("inscricao_municipal")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-            </div>
-            <div>
-              <label htmlFor="nome_contato_pj" className="block text-sm font-medium text-black">Nome do Contato</label>
-              <input type="text" id="nome_contato_pj" {...register("nome_contato_pj")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-            </div>
-          </>
-        )}
+          {tipoPessoa === TipoPessoa.JURIDICA && (
+            <>
+              <div>
+                <label htmlFor="razao_social" className="block text-sm font-medium text-slate-700">Razão Social</label>
+                <input type="text" maxLength={100} id="razao_social" {...register("razao_social")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+                {errors.razao_social && <p className="text-red-500 text-xs mt-1">{errors.razao_social?.message}</p>}
+              </div>
+              <div>
+                <label htmlFor="nome_fantasia" className="block text-sm font-medium text-slate-700">Nome Fantasia</label>
+                <input type="text" id="nome_fantasia" {...register("nome_fantasia")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+              </div>
+              <div>
+                <label htmlFor="cnpj" className="block text-sm font-medium text-slate-700">CNPJ</label>
+                <input
+                  type="text"
+                  id="cnpj"
+                  {...cnpjRegister}
+                  onChange={(e) => {
+                    const masked = maskCNPJ(e.target.value);
+                    e.target.value = masked;
+                    cnpjRegister.onChange(e);
+                    setValue("cnpj", masked, { shouldValidate: true });
+                  }}
+                  maxLength={18}
+                  placeholder="00.000.000/0000-00"
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+                />
+                {errors.cnpj && <p className="text-red-500 text-xs mt-1">{errors.cnpj?.message}</p>}
+              </div>
+              <div>
+                <label htmlFor="inscricao_estadual" className="block text-sm font-medium text-slate-700">Inscrição Estadual</label>
+                <input type="text" id="inscricao_estadual" {...register("inscricao_estadual")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+              </div>
+              <div>
+                <label htmlFor="inscricao_municipal" className="block text-sm font-medium text-slate-700">Inscrição Municipal</label>
+                <input type="text" id="inscricao_municipal" {...register("inscricao_municipal")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+              </div>
+              <div>
+                <label htmlFor="nome_contato_pj" className="block text-sm font-medium text-slate-700">Nome do Contato</label>
+                <input type="text" id="nome_contato_pj" {...register("nome_contato_pj")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+              </div>
+            </>
+          )}
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-black">Email</label>
-          <input
-            type="email"
-            id="email"
-            {...register("email")}
-            placeholder="exemplo@email.com"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-          />
-          {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="telefone_principal" className="block text-sm font-medium text-black">Telefone Principal</label>
-          <input
-            type="tel"
-            id="telefone_principal"
-            {...telefonePrincipalRegister}
-            onChange={(e) => {
-              const masked = maskPhone(e.target.value);
-              e.target.value = masked;
-              telefonePrincipalRegister.onChange(e);
-              setValue("telefone_principal", masked, { shouldValidate: true });
-            }}
-            maxLength={15}
-            placeholder="(00) 00000-0000"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-          />
-          {errors.telefone_principal && <p className="text-red-500 text-xs mt-1">{errors.telefone_principal.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="telefone_secundario" className="block text-sm font-medium text-black">Telefone Secundário</label>
-          <input
-            type="tel"
-            id="telefone_secundario"
-            {...telefoneSecundarioRegister}
-            onChange={(e) => {
-              const masked = maskPhone(e.target.value);
-              e.target.value = masked;
-              telefoneSecundarioRegister.onChange(e);
-              setValue("telefone_secundario", masked, { shouldValidate: true });
-            }}
-            maxLength={15}
-            placeholder="(00) 00000-0000"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-          />
-        </div>
-        <div>
-          <label htmlFor="cep" className="block text-sm font-medium text-black">CEP</label>
-          <input
-            type="text"
-            id="cep"
-            {...cepRegister}
-            onChange={(e) => {
-              const masked = maskCEP(e.target.value);
-              e.target.value = masked;
-              cepRegister.onChange(e);
-              setValue("cep", masked, { shouldValidate: true });
-            }}
-            maxLength={9}
-            placeholder="00000-000"
-            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-          />
-        </div>
-        <div>
-          <label htmlFor="rua" className="block text-sm font-medium text-black">Rua</label>
-          <input type="text" maxLength={100} id="rua" {...register("rua")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="numero" className="block text-sm font-medium text-black">Número</label>
-          <input type="text" maxLength={10} id="numero" {...register("numero")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="complemento" className="block text-sm font-medium text-black">Complemento</label>
-          <input type="text" maxLength={100} id="complemento" {...register("complemento")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="bairro" className="block text-sm font-medium text-black">Bairro</label>
-          <input type="text" maxLength={100} id="bairro" {...register("bairro")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="cidade" className="block text-sm font-medium text-black">Cidade</label>
-          <input type="text" maxLength={100} id="cidade" {...register("cidade")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="estado_uf" className="block text-sm font-medium text-black">Estado (UF)</label>
-          <input type="text" maxLength={2} id="estado_uf" {...register("estado_uf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="observacoes" className="block text-sm font-medium text-black">Observações</label>
-          <textarea id="observacoes" {...register("observacoes")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700">Email</label>
+            <input
+              type="email"
+              id="email"
+              {...register("email")}
+              placeholder="exemplo@email.com"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+            />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email?.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="telefone_principal" className="block text-sm font-medium text-slate-700">Telefone Principal</label>
+            <input
+              type="tel"
+              id="telefone_principal"
+              {...telefonePrincipalRegister}
+              onChange={(e) => {
+                const masked = maskPhone(e.target.value);
+                e.target.value = masked;
+                telefonePrincipalRegister.onChange(e);
+                setValue("telefone_principal", masked, { shouldValidate: true });
+              }}
+              maxLength={15}
+              placeholder="(00) 00000-0000"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+            />
+            {errors.telefone_principal && <p className="text-red-500 text-xs mt-1">{errors.telefone_principal?.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="telefone_secundario" className="block text-sm font-medium text-slate-700">Telefone Secundário</label>
+            <input
+              type="tel"
+              id="telefone_secundario"
+              {...telefoneSecundarioRegister}
+              onChange={(e) => {
+                const masked = maskPhone(e.target.value);
+                e.target.value = masked;
+                telefoneSecundarioRegister.onChange(e);
+                setValue("telefone_secundario", masked, { shouldValidate: true });
+              }}
+              maxLength={15}
+              placeholder="(00) 00000-0000"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="cep" className="block text-sm font-medium text-slate-700">CEP</label>
+            <input
+              type="text"
+              id="cep"
+              {...cepRegister}
+              onChange={(e) => {
+                const masked = maskCEP(e.target.value);
+                e.target.value = masked;
+                cepRegister.onChange(e);
+                setValue("cep", masked, { shouldValidate: true });
+              }}
+              maxLength={9}
+              placeholder="00000-000"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="rua" className="block text-sm font-medium text-slate-700">Rua</label>
+            <input type="text" maxLength={100} id="rua" {...register("rua")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="numero" className="block text-sm font-medium text-slate-700">Número</label>
+            <input type="text" maxLength={10} id="numero" {...register("numero")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="complemento" className="block text-sm font-medium text-slate-700">Complemento</label>
+            <input type="text" maxLength={100} id="complemento" {...register("complemento")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="bairro" className="block text-sm font-medium text-slate-700">Bairro</label>
+            <input type="text" maxLength={100} id="bairro" {...register("bairro")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="cidade" className="block text-sm font-medium text-slate-700">Cidade</label>
+            <input type="text" maxLength={100} id="cidade" {...register("cidade")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="estado_uf" className="block text-sm font-medium text-slate-700">Estado (UF)</label>
+            <input type="text" maxLength={2} id="estado_uf" {...register("estado_uf")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="observacoes" className="block text-sm font-medium text-slate-700">Observações</label>
+            <textarea id="observacoes" {...register("observacoes")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
 
-        <div className="flex justify-end space-x-3">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
-            disabled={isSubmitting}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Salvando..." : "Salvar Cliente"}
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-4 rounded-md transition-colors"
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Salvando..." : "Salvar Cliente"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
