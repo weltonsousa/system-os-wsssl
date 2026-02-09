@@ -1,56 +1,62 @@
-
 import Image from 'next/image';
+import Card from '@/components/ui/Card';
+import Link from 'next/link'; // Still need link for navigation, but maybe we can use Button as a link wrapper if we had it, or just use Link content
+import { buttonVariants } from '@/components/ui/Button';
 
 export default function HomePage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-12">Sistema de Gerenciamento WS Service Solutions</h1>
-
-      {/* <div className="grid md:grid-cols-3 gap-6">
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Gerenciar Clientes</h2>
-          <p className="text-gray-600 mb-4">Cadastre novos clientes, visualize e edite informações existentes, e mantenha um registro completo de seus contatos.</p>
-          <Link href="/clientes" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Acessar Clientes
-          </Link>
-        </div> */}
-
-      {/* <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Gerenciar Serviços</h2>
-          <p className="text-gray-600 mb-4">Registre novas ordens de serviço, acompanhe o status de cada uma, adicione detalhes de equipamentos e soluções aplicadas.</p>
-          <Link href="/servicos" className="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Acessar Serviços
-          </Link>
-        </div> */}
-      {/*
-        <div className="bg-white shadow-lg rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Relatórios</h2>
-          <p className="text-gray-600 mb-4">Gere relatórios detalhados sobre os serviços prestados, status, faturamento e outras métricas importantes para o seu negócio.</p>
-          <Link href="/relatorios" className="inline-block bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-            Ver Relatórios
-          </Link>
-        </div>
-      </div> */}
-      <div className="mt-12 p-6 bg-gray-100 rounded-lg">
-        <h3 className="text-xl text-center font-semibold mb-3 text-gray-700">SOLUÇÕES EM TECNOLOGIA
-          DA INFORMAÇÃO</h3>
-        {/* <p className="text-gray-600"> */}
-        <Image
-          src="/logo2.png"
-          alt="Logo WS Service Solutions"
-          width={192}
-          height={96}
-          className="mx-auto mb-8 w-48 h-auto"
-        />
-        {/* </p> */}
-
-      </div>
-      <div className="mt-12 p-6 bg-gray-100 rounded-lg">
-        <h3 className="text-xl text-center font-semibold mb-3 text-gray-700">Sobre este Sistema</h3>
-        <p className="text-gray-600">
-          Este sistema foi desenvolvido por WS Service Solutions | Gerenciar de forma eficiente seus serviços de informática, desde o cadastro inicial do cliente e do serviço até o acompanhamento do status e a geração de relatórios. Utilize os links acima para navegar pelas principais seções.
+    <div className="max-w-4xl mx-auto space-y-12">
+      <section className="text-center space-y-6 pt-12">
+        <h1 className="text-5xl md:text-6xl font-display font-bold text-slate-900 tracking-tighter">
+          WS Service Solutions
+        </h1>
+        <p className="text-xl text-slate-500 max-w-2xl mx-auto font-light">
+          Sistema de gerenciamento de serviços de informática de alto desempenho.
         </p>
+      </section>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        <Card className="hover:border-indigo-200 transition-colors group">
+          <div className="p-2 space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+              Soluções em TI
+            </h3>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Gerencie seus serviços com eficiência e precisão. Desde o cadastro até a finalização, controle total do fluxo de trabalho.
+            </p>
+            <div className="pt-4 flex justify-center">
+              <Image
+                src="/logo2.png"
+                alt="Logo WS Service Solutions"
+                width={150}
+                height={75}
+                className="opacity-80 grayscale group-hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+          </div>
+        </Card>
+
+        <Card className="hover:border-indigo-200 transition-colors">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900">Sobre o Sistema</h3>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Desenvolvido para otimizar processos e garantir a satisfação do cliente.
+              Utilize a navegação superior para acessar os módulos de Clientes, Serviços e Relatórios.
+            </p>
+            <div className="pt-4">
+              <Link href="/login" className={buttonVariants('primary', 'md', 'w-full')}>
+                Acessar Painel
+              </Link>
+            </div>
+          </div>
+        </Card>
       </div>
+
+      <footer className="text-center pt-8 border-t border-slate-200/50">
+        <p className="text-xs text-slate-400 uppercase tracking-widest">
+          Internal System v2.0
+        </p>
+      </footer>
     </div>
   );
 }

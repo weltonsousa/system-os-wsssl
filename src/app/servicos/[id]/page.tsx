@@ -132,20 +132,20 @@ export default function ServicoDetailPage() {
   if (!servico) return <p className="text-center mt-8">Serviço não encontrado.</p>;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6">
+    <div className="container mx-auto p-4 max-w-4xl">
+      <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm p-6">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Detalhes da Ordem de Serviço</h1>
-            <p className="text-gray-500">OS: {servico.id_servico?.substring(0, 12)}...</p>
+            <h1 className="text-3xl font-bold text-slate-800">Detalhes da Ordem de Serviço</h1>
+            <p className="text-slate-500">OS: {servico.id_servico?.substring(0, 12)}...</p>
           </div>
           <div className="flex space-x-2">
-            <Link href={`/servicos/${servicoId}/editar`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <Link href={`/servicos/${servicoId}/editar`} className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">
               Editar OS
             </Link>
             <button
               onClick={handleDeleteServico}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+              className="bg-rose-500 hover:bg-rose-600 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm"
               disabled={isLoading || isUpdatingStatus}
             >
               Excluir OS
@@ -157,70 +157,70 @@ export default function ServicoDetailPage() {
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Informações do Cliente</h2>
-            <p className="text-black"><strong>Nome/Razão Social:</strong> {servico.cliente?.nome_completo || servico.cliente?.razao_social}</p>
-            <p className="text-black"><strong>Email:</strong> {servico.cliente?.email}</p>
-            <p className="text-black"><strong>Telefone:</strong> {servico.cliente?.telefone_principal}</p>
-            <Link href={`/clientes/${servico.id_cliente}/editar`} className="text-sm text-blue-500 hover:underline">Ver/Editar Cliente</Link>
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Informações do Cliente</h2>
+            <p className="text-slate-700"><strong>Nome/Razão Social:</strong> {servico.cliente?.nome_completo || servico.cliente?.razao_social}</p>
+            <p className="text-slate-700"><strong>Email:</strong> {servico.cliente?.email}</p>
+            <p className="text-slate-700"><strong>Telefone:</strong> {servico.cliente?.telefone_principal}</p>
+            <Link href={`/clientes/${servico.id_cliente}/editar`} className="text-sm text-indigo-500 hover:underline">Ver/Editar Cliente</Link>
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Informações do Serviço</h2>
-            <p className="text-black"><strong>Tipo de Serviço:</strong> {servico.tipo_servico?.nome_tipo_servico}</p>
-            <p className="text-black"><strong>Status Atual:</strong> <span className="font-semibold">{servico.status_atual?.nome_status}</span></p>
-            <p className="text-black"><strong>Data de Entrada:</strong> {new Date(servico.data_entrada!).toLocaleDateString()}</p>
-            {servico.data_previsao_saida && <p className="text-black"><strong>Previsão de Saída:</strong> {new Date(servico.data_previsao_saida).toLocaleDateString()}</p>}
-            {servico.data_efetiva_saida && <p className="text-black"><strong>Data Efetiva de Saída:</strong> {new Date(servico.data_efetiva_saida).toLocaleDateString()}</p>}
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Informações do Serviço</h2>
+            <p className="text-slate-700"><strong>Tipo de Serviço:</strong> {servico.tipo_servico?.nome_tipo_servico}</p>
+            <p className="text-slate-700"><strong>Status Atual:</strong> <span className="font-semibold text-slate-900">{servico.status_atual?.nome_status}</span></p>
+            <p className="text-slate-700"><strong>Data de Entrada:</strong> {new Date(servico.data_entrada!).toLocaleDateString()}</p>
+            {servico.data_previsao_saida && <p className="text-slate-700"><strong>Previsão de Saída:</strong> {new Date(servico.data_previsao_saida).toLocaleDateString()}</p>}
+            {servico.data_efetiva_saida && <p className="text-slate-700"><strong>Data Efetiva de Saída:</strong> {new Date(servico.data_efetiva_saida).toLocaleDateString()}</p>}
           </div>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Descrição do Problema</h2>
-          <p className="text-gray-600 whitespace-pre-wrap">{servico.descricao_problema}</p>
+          <h2 className="text-xl font-semibold text-slate-700 mb-2">Descrição do Problema</h2>
+          <p className="text-slate-600 whitespace-pre-wrap">{servico.descricao_problema}</p>
         </div>
 
         {servico.equipamento_descricao && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Detalhes do Equipamento</h2>
-            <p className="text-black"><strong>Descrição:</strong> {servico.equipamento_descricao}</p>
-            {servico.equipamento_marca && <p className="text-black"><strong>Marca:</strong> {servico.equipamento_marca}</p>}
-            {servico.equipamento_modelo && <p className="text-black"><strong>Modelo:</strong> {servico.equipamento_modelo}</p>}
-            {servico.equipamento_num_serie && <p className="text-black"><strong>Nº de Série:</strong> {servico.equipamento_num_serie}</p>}
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Detalhes do Equipamento</h2>
+            <p className="text-slate-700"><strong>Descrição:</strong> {servico.equipamento_descricao}</p>
+            {servico.equipamento_marca && <p className="text-slate-700"><strong>Marca:</strong> {servico.equipamento_marca}</p>}
+            {servico.equipamento_modelo && <p className="text-slate-700"><strong>Modelo:</strong> {servico.equipamento_modelo}</p>}
+            {servico.equipamento_num_serie && <p className="text-slate-700"><strong>Nº de Série:</strong> {servico.equipamento_num_serie}</p>}
           </div>
         )}
 
         {(servico.valor_servico || servico.valor_pecas || servico.valor_mao_de_obra) && (
-          <div className="mb-6 bg-gray-50 p-4 rounded-md">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Valores</h2>
-            {servico.valor_pecas !== null && <p className="text-black"><strong>Valor das Peças:</strong> R$ {servico.valor_pecas?.toFixed(2)}</p>}
-            {servico.valor_mao_de_obra !== null && <p className="text-black"><strong>Valor da Mão de Obra:</strong> R$ {servico.valor_mao_de_obra?.toFixed(2)}</p>}
-            {servico.valor_servico !== null && <p className="text-black"><strong>Valor Total do Serviço:</strong> R$ {servico.valor_servico?.toFixed(2)}</p>}
+          <div className="mb-6 bg-slate-50 p-4 rounded-md border border-slate-100">
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Valores</h2>
+            {servico.valor_pecas !== null && <p className="text-slate-700"><strong>Valor das Peças:</strong> R$ {servico.valor_pecas?.toFixed(2)}</p>}
+            {servico.valor_mao_de_obra !== null && <p className="text-slate-700"><strong>Valor da Mão de Obra:</strong> R$ {servico.valor_mao_de_obra?.toFixed(2)}</p>}
+            {servico.valor_servico !== null && <p className="text-slate-700 font-medium"><strong>Valor Total do Serviço:</strong> R$ {servico.valor_servico?.toFixed(2)}</p>}
           </div>
         )}
 
         {servico.descricao_solucao && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Descrição da Solução</h2>
-            <p className="text-gray-600 whitespace-pre-wrap">{servico.descricao_solucao}</p>
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Descrição da Solução</h2>
+            <p className="text-slate-600 whitespace-pre-wrap">{servico.descricao_solucao}</p>
           </div>
         )}
 
         {servico.observacoes_internas && (
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Observações Internas</h2>
-            <p className="text-gray-600 whitespace-pre-wrap">{servico.observacoes_internas}</p>
+            <h2 className="text-xl font-semibold text-slate-700 mb-2">Observações Internas</h2>
+            <p className="text-slate-600 whitespace-pre-wrap">{servico.observacoes_internas}</p>
           </div>
         )}
 
-        <div className="mb-6 pt-4 border-t">
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">Atualizar Status do Serviço</h2>
+        <div className="mb-6 pt-4 border-t border-slate-100">
+          <h2 className="text-xl font-semibold text-slate-700 mb-2">Atualizar Status do Serviço</h2>
           <div className="flex flex-col sm:flex-row gap-2 items-end">
-            <div className="flex-grow">
-              <label htmlFor="novo_status" className="block text-sm font-medium text-gray-700">Novo Status</label>
+            <div className="flex-grow w-full">
+              <label htmlFor="novo_status" className="block text-sm font-medium text-slate-700">Novo Status</label>
               <select
                 id="novo_status"
                 value={novoStatusId}
                 onChange={(e) => setNovoStatusId(e.target.value)}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-slate-900 bg-white"
                 disabled={isUpdatingStatus}
               >
                 {statusDisponiveis.map(status => (
@@ -230,21 +230,21 @@ export default function ServicoDetailPage() {
                 ))}
               </select>
             </div>
-            <div className="flex-grow">
-              <label htmlFor="observacao_mudanca_status" className="block text-sm font-medium text-gray-700">Observação (Opcional)</label>
+            <div className="flex-grow w-full">
+              <label htmlFor="observacao_mudanca_status" className="block text-sm font-medium text-slate-700">Observação (Opcional)</label>
               <input
                 type="text"
                 id="observacao_mudanca_status"
                 value={observacaoMudancaStatus}
                 onChange={(e) => setObservacaoMudancaStatus(e.target.value)}
-                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900"
                 disabled={isUpdatingStatus}
                 placeholder="Ex: Aguardando peça"
               />
             </div>
             <button
               onClick={handleStatusUpdate}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 w-full sm:w-auto"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 w-full sm:w-auto transition-colors shadow-sm"
               disabled={isUpdatingStatus || novoStatusId === servico.id_status_atual}
             >
               {isUpdatingStatus ? "Atualizando..." : "Atualizar Status"}
@@ -252,27 +252,27 @@ export default function ServicoDetailPage() {
           </div>
         </div>
 
-        <div className="pt-4 border-t">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Histórico de Status</h2>
+        <div className="pt-4 border-t border-slate-100">
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Histórico de Status</h2>
           {servico.historico && servico.historico.length > 0 ? (
             <ul className="space-y-3">
               {servico.historico.map(item => (
-                <li key={item.id_historico_servico} className="p-3 bg-gray-50 rounded-md shadow-sm">
-                  <p className="text-sm text-gray-500">{new Date(item.data_alteracao).toLocaleString()}</p>
-                  <p className="text-black">
+                <li key={item.id_historico_servico} className="p-3 bg-slate-50 rounded-md shadow-sm border border-slate-100">
+                  <p className="text-sm text-slate-500">{new Date(item.data_alteracao).toLocaleString()}</p>
+                  <p className="text-slate-800">
                     Status alterado
                     {item.status_anterior ? (
                       <> de <span className="font-medium">{item.status_anterior.nome_status}</span></>
                     ) : ""}
                     {" para "}
-                    <span className="font-medium text-green-600">{item.status_novo.nome_status}</span>.
+                    <span className="font-medium text-emerald-600">{item.status_novo.nome_status}</span>.
                   </p>
-                  {item.observacao && <p className="text-sm text-gray-600 mt-1"><em>Observação: {item.observacao}</em></p>}
+                  {item.observacao && <p className="text-sm text-slate-600 mt-1"><em>Observação: {item.observacao}</em></p>}
                 </li>
               ))}
             </ul>
           ) : (
-            <p>Nenhum histórico de status para este serviço.</p>
+            <p className="text-slate-500">Nenhum histórico de status para este serviço.</p>
           )}
         </div>
         <div className="flex justify-between items-center pt-4">
@@ -280,7 +280,7 @@ export default function ServicoDetailPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-4 rounded-md transition-colors"
             // disabled={isSubmitting}
             >
               Cancelar

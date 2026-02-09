@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import { StatusServico, TipoPessoa, Servico } from "@/types";
 import { useAlert } from "@/components/ui/AlertContext";
+import Card from "@/components/ui/Card";
 
 async function fetchStatusServico() {
   const res = await fetch("/api/status-servico");
@@ -189,21 +190,21 @@ export default function RelatoriosPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8">Relatórios</h1>
+    <div className="container mx-auto p-4 max-w-6xl space-y-8">
+      <h1 className="text-3xl font-bold text-slate-800">Relatórios</h1>
       {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">Erro: {error}</p>}
 
       {/* Relatório de Serviços por Status */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Relatório de Serviços por Status</h2>
-        <div className="grid md:grid-cols-3 gap-4 mb-4">
+      <Card>
+        <h2 className="text-2xl font-semibold mb-6 text-slate-800">Relatório de Serviços por Status</h2>
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div>
-            <label htmlFor="filtroStatusId" className="block text-sm font-medium text-gray-700">Status do Serviço</label>
+            <label htmlFor="filtroStatusId" className="block text-sm font-medium text-slate-700 mb-1">Status do Serviço</label>
             <select
               id="filtroStatusId"
               value={filtroStatusId}
               onChange={(e) => setFiltroStatusId(e.target.value)}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-slate-900 bg-white border"
               disabled={loadingStatus}
             >
               <option value="">Todos os Status</option>
@@ -213,59 +214,59 @@ export default function RelatoriosPage() {
             </select>
           </div>
           <div>
-            <label htmlFor="filtroDataInicioServicos" className="block text-sm font-medium text-gray-700">Data de Entrada (Início)</label>
+            <label htmlFor="filtroDataInicioServicos" className="block text-sm font-medium text-slate-700 mb-1">Data de Entrada (Início)</label>
             <input
               type="date"
               id="filtroDataInicioServicos"
               value={filtroDataInicioServicos}
               onChange={(e) => setFiltroDataInicioServicos(e.target.value)}
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900 border"
             />
           </div>
           <div>
-            <label htmlFor="filtroDataFimServicos" className="block text-sm font-medium text-gray-700">Data de Entrada (Fim)</label>
+            <label htmlFor="filtroDataFimServicos" className="block text-sm font-medium text-slate-700 mb-1">Data de Entrada (Fim)</label>
             <input
               type="date"
               id="filtroDataFimServicos"
               value={filtroDataFimServicos}
               onChange={(e) => setFiltroDataFimServicos(e.target.value)}
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900 border"
             />
           </div>
         </div>
-        <div className="flex space-x-2 mb-4">
-          <button onClick={handleExibirRelatorioServicosStatus} className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded disabled:opacity-50" disabled={loadingResultadoServicos}>
+        <div className="flex space-x-3 mb-6">
+          <button onClick={handleExibirRelatorioServicosStatus} className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm" disabled={loadingResultadoServicos}>
             {loadingResultadoServicos ? "Carregando..." : "Exibir Resultado"}
           </button>
           {/* <button onClick={() => handleDownloadRelatorio("servicos-status", "csv")} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Baixar CSV</button> */}
-          <button onClick={() => handleDownloadRelatorio("servicos-status", "pdf")} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Baixar PDF</button>
+          <button onClick={() => handleDownloadRelatorio("servicos-status", "pdf")} className="bg-rose-500 hover:bg-rose-600 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">Baixar PDF</button>
           {/* <button onClick={() => handleDownloadRelatorio("servicos-status", "json")} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Baixar JSON</button> */}
         </div>
         {/* Tabela de resultado */}
         {resultadoServicosStatus && resultadoServicosStatus.length > 0 && (
-          <div className="overflow-x-auto mt-4">
-            <table className="min-w-full bg-white border border-gray-200">
-              <thead>
+          <div className="overflow-x-auto mt-4 rounded-md border border-slate-200">
+            <table className="min-w-full bg-white divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-4 py-2 border text-black">OS</th>
-                  <th className="px-4 py-2 border text-black">Cliente</th>
-                  <th className="px-4 py-2 border text-black">Tipo Pessoa</th>
-                  <th className="px-4 py-2 border text-black">Tipo Serviço</th>
-                  <th className="px-4 py-2 border text-black">Data Entrada</th>
-                  <th className="px-4 py-2 border text-black">Status Atual</th>
-                  <th className="px-4 py-2 border text-black">Valor Serviço</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">OS</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cliente</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tipo Pessoa</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tipo Serviço</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Data Entrada</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status Atual</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Valor Serviço</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-white divide-y divide-slate-200">
                 {resultadoServicosStatus.map((s) => (
-                  <tr key={s.id_servico}>
-                    <td className="px-4 py-2 border text-black">{s.id_servico}</td>
-                    <td className="px-4 py-2 border text-black">{s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social}</td>
-                    <td className="px-4 py-2 border text-black">{s.cliente?.tipo_pessoa}</td>
-                    <td className="px-4 py-2 border text-black">{s.tipo_servico?.nome_tipo_servico}</td>
-                    <td className="px-4 py-2 border text-black">{s.data_entrada ? new Date(s.data_entrada).toLocaleDateString() : ""}</td>
-                    <td className="px-4 py-2 border text-black">{s.status_atual?.nome_status}</td>
-                    <td className="px-4 py-2 border text-black">{s.valor_servico?.toFixed(2)}</td>
+                  <tr key={s.id_servico} className="hover:bg-slate-50">
+                    <td className="px-4 py-2 text-sm text-slate-900">{s.id_servico?.substring(0, 8)}...</td>
+                    <td className="px-4 py-2 text-sm text-slate-900">{s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.cliente?.tipo_pessoa}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.tipo_servico?.nome_tipo_servico}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.data_entrada ? new Date(s.data_entrada).toLocaleDateString() : ""}</td>
+                    <td className="px-4 py-2 text-sm text-slate-900 font-medium">{s.status_atual?.nome_status}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.valor_servico?.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -273,100 +274,100 @@ export default function RelatoriosPage() {
           </div>
         )}
         {resultadoServicosStatus && resultadoServicosStatus.length === 0 && (
-          <p className="text-gray-500 mt-4">Nenhum resultado encontrado para o filtro selecionado.</p>
+          <p className="text-slate-500 mt-4">Nenhum resultado encontrado para o filtro selecionado.</p>
         )}
-      </div>
+      </Card>
 
       {/* Relatório de Faturamento */}
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-800">Relatório de Faturamento</h2>
-        <div className="grid md:grid-cols-3 gap-4 mb-4">
+      <Card>
+        <h2 className="text-2xl font-semibold mb-6 text-slate-800">Relatório de Faturamento</h2>
+        <div className="grid md:grid-cols-3 gap-6 mb-6">
           <div>
-            <label htmlFor="filtroDataInicioFaturamento" className="block text-sm font-medium text-gray-700">Data de Saída Efetiva (Início)</label>
-            <input
-              type="date"
-              id="filtroDataInicioFaturamento"
-              value={filtroDataInicioFaturamento}
-              onChange={(e) => setFiltroDataInicioFaturamento(e.target.value)}
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="filtroDataFimFaturamento" className="block text-sm font-medium text-gray-700">Data de Saída Efetiva (Fim)</label>
-            <input
-              type="date"
-              id="filtroDataFimFaturamento"
-              value={filtroDataFimFaturamento}
-              onChange={(e) => setFiltroDataFimFaturamento(e.target.value)}
-              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="filtroTipoPessoaFaturamento" className="block text-sm font-medium text-gray-700">Tipo de Cliente</label>
+            <label htmlFor="filtroTipoPessoaFaturamento" className="block text-sm font-medium text-slate-700 mb-1">Tipo de Cliente</label>
             <select
               id="filtroTipoPessoaFaturamento"
               value={filtroTipoPessoaFaturamento}
               onChange={(e) => setFiltroTipoPessoaFaturamento(e.target.value as "TODOS" | "FISICA" | "JURIDICA")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-slate-900 bg-white border"
             >
               <option value="TODOS">Todos</option>
               <option value={TipoPessoa.FISICA} >Pessoa Física</option>
               <option value={TipoPessoa.JURIDICA} >Pessoa Jurídica</option>
             </select>
           </div>
+          <div>
+            <label htmlFor="filtroDataInicioFaturamento" className="block text-sm font-medium text-slate-700 mb-1">Data de Saída Efetiva (Início)</label>
+            <input
+              type="date"
+              id="filtroDataInicioFaturamento"
+              value={filtroDataInicioFaturamento}
+              onChange={(e) => setFiltroDataInicioFaturamento(e.target.value)}
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900 border"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="filtroDataFimFaturamento" className="block text-sm font-medium text-slate-700 mb-1">Data de Saída Efetiva (Fim)</label>
+            <input
+              type="date"
+              id="filtroDataFimFaturamento"
+              value={filtroDataFimFaturamento}
+              onChange={(e) => setFiltroDataFimFaturamento(e.target.value)}
+              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900 border"
+              required
+            />
+          </div>
         </div>
-        <div className="flex space-x-2 mb-4">
-          <button onClick={handleExibirRelatorioFaturamento} className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded disabled:opacity-50" disabled={loadingResultadoFaturamento}>
+        <div className="flex space-x-3 mb-6">
+          <button onClick={handleExibirRelatorioFaturamento} className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm" disabled={loadingResultadoFaturamento}>
             {loadingResultadoFaturamento ? "Carregando..." : "Exibir Resultado"}
           </button>
-          <button onClick={() => handleDownloadRelatorio("faturamento", "pdf")} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Baixar PDF</button>
+          <button onClick={() => handleDownloadRelatorio("faturamento", "pdf")} className="bg-rose-500 hover:bg-rose-600 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">Baixar PDF</button>
         </div>
         {/* Tabela de resultado */}
         {resultadoFaturamento && resultadoFaturamento.data.length > 0 && (
-          <div className="overflow-x-auto mt-4">
-            <table className="min-w-full bg-white border border-gray-200">
-              <thead>
+          <div className="overflow-x-auto mt-4 rounded-md border border-slate-200">
+            <table className="min-w-full bg-white divide-y divide-slate-200">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-4 py-2 border text-black">OS</th>
-                  <th className="px-4 py-2 border text-black">Cliente</th>
-                  <th className="px-4 py-2 border text-black">Tipo Pessoa</th>
-                  <th className="px-4 py-2 border text-black">Tipo Serviço</th>
-                  <th className="px-4 py-2 border text-black">Data Saída Efetiva</th>
-                  <th className="px-4 py-2 border text-black">Valor Serviço</th>
-                  <th className="px-4 py-2 border text-black">Valor Peças</th>
-                  <th className="px-4 py-2 border text-black">Valor Mão de Obra</th>
-                  <th className="px-4 py-2 border text-black">Valor Total</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">OS</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Cliente</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tipo Pessoa</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tipo Serviço</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Data Saída Efetiva</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Valor Serviço</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Valor Peças</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Valor Mão de Obra</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Valor Total</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-white divide-y divide-slate-200">
                 {resultadoFaturamento.data.map((s) => (
-                  <tr key={s.id_servico}>
-                    <td className="px-4 py-2 border text-black">{s.id_servico}</td>
-                    <td className="px-4 py-2 border text-black">{s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social}</td>
-                    <td className="px-4 py-2 border text-black">{s.cliente?.tipo_pessoa}</td>
-                    <td className="px-4 py-2 border text-black">{s.tipo_servico?.nome_tipo_servico}</td>
-                    <td className="px-4 py-2 border text-black">{s.data_efetiva_saida ? new Date(s.data_efetiva_saida).toLocaleDateString() : ""}</td>
-                    <td className="px-4 py-2 border text-black">{s.valor_servico?.toFixed(2)}</td>
-                    <td className="px-4 py-2 border text-black">{s.valor_pecas?.toFixed(2)}</td>
-                    <td className="px-4 py-2 border text-black">{s.valor_mao_de_obra?.toFixed(2)}</td>
-                    <td className="px-4 py-2 border text-black">{((s.valor_servico || 0) + (s.valor_pecas || 0) + (s.valor_mao_de_obra || 0)).toFixed(2)}</td>
+                  <tr key={s.id_servico} className="hover:bg-slate-50">
+                    <td className="px-4 py-2 text-sm text-slate-900">{s.id_servico?.substring(0, 8)}...</td>
+                    <td className="px-4 py-2 text-sm text-slate-900">{s.cliente?.tipo_pessoa === "FISICA" ? s.cliente?.nome_completo : s.cliente?.razao_social}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.cliente?.tipo_pessoa}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.tipo_servico?.nome_tipo_servico}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.data_efetiva_saida ? new Date(s.data_efetiva_saida).toLocaleDateString() : ""}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.valor_servico?.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.valor_pecas?.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-sm text-slate-500">{s.valor_mao_de_obra?.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-sm font-medium text-slate-900">{((s.valor_servico || 0) + (s.valor_pecas || 0) + (s.valor_mao_de_obra || 0)).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="mt-4 text-right">
-              <span className="font-bold text-lg text-black">Total Faturado: R$ {resultadoFaturamento.totalFaturado.toFixed(2)}</span>
+            <div className="mt-4 text-right p-4 bg-slate-50 rounded-b-md">
+              <span className="font-bold text-lg text-slate-800">Total Faturado: R$ {resultadoFaturamento.totalFaturado.toFixed(2)}</span>
               <br />
-              <span className="text-gray-600 text-sm">Período: {new Date(resultadoFaturamento.periodo.inicio).toLocaleDateString()} a {new Date(resultadoFaturamento.periodo.fim).toLocaleDateString()}</span>
+              <span className="text-slate-500 text-sm">Período: {new Date(resultadoFaturamento.periodo.inicio).toLocaleDateString()} a {new Date(resultadoFaturamento.periodo.fim).toLocaleDateString()}</span>
             </div>
           </div>
         )}
         {resultadoFaturamento && resultadoFaturamento.data.length === 0 && (
-          <p className="text-gray-500 mt-4">Nenhum resultado encontrado para o filtro selecionado.</p>
+          <p className="text-slate-500 mt-4">Nenhum resultado encontrado para o filtro selecionado.</p>
         )}
-      </div>
+      </Card>
 
     </div>
   );

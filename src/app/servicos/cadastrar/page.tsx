@@ -114,103 +114,105 @@ export default function CadastrarServicoPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-neutral-100 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-blue-600">Cadastrar Nova Ordem de Serviço</h1>
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="id_cliente" className="block text-sm font-medium text-gray-700">Cliente</label>
-          <select
-            id="id_cliente"
-            {...register("id_cliente")}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-          >
-            <option value="">Selecione um cliente</option>
-            {clientes.map(cliente => (
-              <option key={cliente.id_cliente} value={cliente.id_cliente!}>
-                {cliente.tipo_pessoa === "FISICA" ? cliente.nome_completo : cliente.razao_social} ({cliente.email})
-              </option>
-            ))}
-          </select>
-          {errors.id_cliente && <p className="text-red-500 text-xs mt-1">{errors.id_cliente.message}</p>}
-        </div>
+    <div className="container mx-auto p-4 mt-8 max-w-3xl">
+      <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm p-6">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">Cadastrar Nova Ordem de Serviço</h1>
+        {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="id_cliente" className="block text-sm font-medium text-slate-700">Cliente</label>
+            <select
+              id="id_cliente"
+              {...register("id_cliente")}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-slate-900 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Selecione um cliente</option>
+              {clientes.map(cliente => (
+                <option key={cliente.id_cliente} value={cliente.id_cliente!}>
+                  {cliente.tipo_pessoa === "FISICA" ? cliente.nome_completo : cliente.razao_social} ({cliente.email})
+                </option>
+              ))}
+            </select>
+            {errors.id_cliente && <p className="text-red-500 text-xs mt-1">{errors.id_cliente?.message}</p>}
+          </div>
 
-        <div>
-          <label htmlFor="id_tipo_servico" className="block text-sm font-medium text-gray-700">Tipo de Serviço</label>
-          <select
-            id="id_tipo_servico"
-            {...register("id_tipo_servico")}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-          >
-            <option value="">Selecione o tipo de serviço</option>
-            {tiposServico.map(tipo => (
-              <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!}>
-                {tipo.nome_tipo_servico}
-              </option>
-            ))}
-          </select>
-          {errors.id_tipo_servico && <p className="text-red-500 text-xs mt-1">{errors.id_tipo_servico.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="descricao_problema" className="block text-sm font-medium text-gray-700">Descrição do Problema/Solicitação</label>
-          <textarea id="descricao_problema" {...register("descricao_problema")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-          {errors.descricao_problema && <p className="text-red-500 text-xs mt-1">{errors.descricao_problema.message}</p>}
-        </div>
+          <div>
+            <label htmlFor="id_tipo_servico" className="block text-sm font-medium text-slate-700">Tipo de Serviço</label>
+            <select
+              id="id_tipo_servico"
+              {...register("id_tipo_servico")}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base text-slate-900 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Selecione o tipo de serviço</option>
+              {tiposServico.map(tipo => (
+                <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!}>
+                  {tipo.nome_tipo_servico}
+                </option>
+              ))}
+            </select>
+            {errors.id_tipo_servico && <p className="text-red-500 text-xs mt-1">{errors.id_tipo_servico?.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="descricao_problema" className="block text-sm font-medium text-slate-700">Descrição do Problema/Solicitação</label>
+            <textarea id="descricao_problema" {...register("descricao_problema")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+            {errors.descricao_problema && <p className="text-red-500 text-xs mt-1">{errors.descricao_problema?.message}</p>}
+          </div>
 
-        <h2 className="text-xl font-semibold pt-4 mt-6 text-blue-600">Detalhes do Equipamento (Opcional)</h2>
-        <div>
-          <label htmlFor="equipamento_descricao" className="block text-sm font-medium text-gray-700">Descrição do Equipamento</label>
-          <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="equipamento_marca" className="block text-sm font-medium text-gray-700">Marca</label>
-          <input type="text" id="equipamento_marca" {...register("equipamento_marca")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="equipamento_modelo" className="block text-sm font-medium text-gray-700">Modelo</label>
-          <input type="text" id="equipamento_modelo" {...register("equipamento_modelo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="equipamento_num_serie" className="block text-sm font-medium text-gray-700">Número de Série</label>
-          <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
+          <h2 className="text-xl font-semibold pt-4 mt-6 text-slate-800">Detalhes do Equipamento (Opcional)</h2>
+          <div>
+            <label htmlFor="equipamento_descricao" className="block text-sm font-medium text-slate-700">Descrição do Equipamento</label>
+            <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="equipamento_marca" className="block text-sm font-medium text-slate-700">Marca</label>
+            <input type="text" id="equipamento_marca" {...register("equipamento_marca")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="equipamento_modelo" className="block text-sm font-medium text-slate-700">Modelo</label>
+            <input type="text" id="equipamento_modelo" {...register("equipamento_modelo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="equipamento_num_serie" className="block text-sm font-medium text-slate-700">Número de Série</label>
+            <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
 
-        <h2 className="text-xl font-semibold pt-4  mt-6 text-blue-600">Valores e Prazos (Opcional)</h2>
-        <div>
-          <label htmlFor="data_previsao_saida" className="block text-sm font-medium text-gray-700">Data de Previsão de Saída</label>
-          <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="valor_servico" className="block text-sm font-medium text-gray-700">Valor Total do Serviço (R$)</label>
-          <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor das Peças (R$)</label>
-          <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
-        <div>
-          <label htmlFor="valor_mao_de_obra" className="block text-sm font-medium text-gray-700">Valor da Mão de Obra (R$)</label>
-          <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-        </div>
+          <h2 className="text-xl font-semibold pt-4  mt-6 text-slate-800">Valores e Prazos (Opcional)</h2>
+          <div>
+            <label htmlFor="data_previsao_saida" className="block text-sm font-medium text-slate-700">Data de Previsão de Saída</label>
+            <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="valor_servico" className="block text-sm font-medium text-slate-700">Valor Total do Serviço (R$)</label>
+            <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="valor_pecas" className="block text-sm font-medium text-slate-700">Valor das Peças (R$)</label>
+            <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
+          <div>
+            <label htmlFor="valor_mao_de_obra" className="block text-sm font-medium text-slate-700">Valor da Mão de Obra (R$)</label>
+            <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+          </div>
 
-        <div className="flex justify-end space-x-3 pt-4">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
-            disabled={isSubmitting}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Salvando..." : "Salvar Ordem de Serviço"}
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-4 rounded-md transition-colors"
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Salvando..." : "Salvar Ordem de Serviço"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -75,34 +75,36 @@ export default function CadastrarStatusServicoPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-neutral-100 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-blue-600">Novo Tipo de Status de Serviço</h1>
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label htmlFor="nome_status" className="block text-sm font-medium text-gray-700">Nome</label>
-          <input type="text" id="nome_status" {...register("nome_status")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-          {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status.message}</p>}
-        </div>
+    <div className="container mx-auto p-4 mt-8 max-w-3xl">
+      <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm p-6">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">Novo Status de Serviço</h1>
+        {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label htmlFor="nome_status" className="block text-sm font-medium text-slate-700">Nome</label>
+            <input type="text" id="nome_status" {...register("nome_status")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-slate-300 rounded-md p-2 text-slate-900" />
+            {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status?.message}</p>}
+          </div>
 
-        <div className="flex justify-end space-x-3 pt-4">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
-            disabled={isSubmitting}
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Salvando..." : "Salvar Status de Serviço"}
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2 px-4 rounded-md transition-colors"
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md disabled:opacity-50 transition-colors shadow-sm"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Salvando..." : "Salvar Status de Serviço"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

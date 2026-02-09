@@ -44,7 +44,7 @@ export default async function PainelPage() {
       <div className="mt-12 p-6 bg-gray-100 rounded-lg">
         <h3 className="text-xl font-semibold mb-3 text-gray-700">Sobre este Sistema</h3>
         <p className="text-gray-600">
-          Este sistema foi desenvolvido por WS Service Solutions | Gerenciar de forma eficiente seus serviços de informática, desde o cadastro inicial do cliente e do serviço até o acompanhamento do status e a geração de relatórios. Utilize os links acima para navegar pelas principais seções.
+          Este sistema foi desenvolvido por WS Service Solutions | Gerenciar de forma eficiente seus serviços de informática, desde o cadastro inicial do cliente e do serviço até o acompanhamento do status e a geração de relatórios. Utilize as opções acima para navegar pelas principais seções.
         </p>
       </div>
     </div>

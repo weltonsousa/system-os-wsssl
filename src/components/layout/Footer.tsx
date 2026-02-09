@@ -1,7 +1,11 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 text-center text-xs p-3 bottom-0 w-full border-t">
-      <p className="text-black text-sm">&copy; {new Date().getFullYear()} WS Service Solutions. Todos os direitos reservados.</p>
+    <footer className="bg-white border-t border-slate-200 mt-auto">
+      <div className="container mx-auto px-4 py-6">
+        <p className="text-center text-sm text-slate-500">
+          &copy; {new Date().getFullYear()} <span className="font-semibold text-slate-900">WS Service Solutions</span>. Todos os direitos reservados.
+        </p>
+      </div>
     </footer>
   );
 };
