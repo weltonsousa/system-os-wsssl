@@ -51,7 +51,7 @@ export default function ClientesPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-slate-800">Clientes</h1>
           <Link href="/clientes/cadastrar" className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">
-            Novo Cliente
+            Cadastrar
           </Link>
         </div>
 
