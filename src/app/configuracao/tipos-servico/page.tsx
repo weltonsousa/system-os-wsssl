@@ -79,8 +79,8 @@ export default function TiposServicoPage() {
       <Card>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Tipo de Serviço</h1>
-          <Link href="/configuracao/tipos-servico/cadastrar" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Novo Tipo de Serviço
+          <Link href="/configuracao/tipos-servico/cadastrar" className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">
+            Cadastrar
           </Link>
         </div>
 

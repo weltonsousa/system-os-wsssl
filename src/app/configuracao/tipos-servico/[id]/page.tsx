@@ -157,7 +157,7 @@ export default function TipoServicoDetailPage() {
               className="bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 hover:bg-rose-100 dark:hover:bg-rose-500/20 font-medium py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 text-sm disabled:opacity-50 flex-1 sm:flex-none text-center"
               disabled={isSubmitting}
             >
-              Excluir Tipo de Serviço
+              Excluir
             </button>
             <div className="space-x-3">
               <button

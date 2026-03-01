@@ -79,8 +79,8 @@ export default function StatusServicoPage() {
       <Card>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Status de Serviço</h1>
-          <Link href="/configuracao/status-servico/cadastrar" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Novo Status de Serviço
+          <Link href="/configuracao/status-servico/cadastrar" className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">
+            Cadastrar
           </Link>
         </div>
 
