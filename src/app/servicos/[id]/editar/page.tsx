@@ -8,6 +8,9 @@ import { z } from "zod";
 import { Servico, Cliente, TipoServico, StatusServico } from "@/types";
 import { useEffect, useState } from "react";
 import { useAlert } from "@/components/ui/AlertContext";
+import { WrenchScrewdriverIcon, ComputerDesktopIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
+import { Tabs, TabItem } from "@/components/ui/Tabs";
+import { Field } from "@/components/ui/Field";
 
 const servicoUpdateFormSchema = z.object({
   id_cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -91,7 +94,6 @@ export default function EditarServicoPage() {
         fetchStatusServicoParaSelect(),
       ]).then(([servicoData, clientesData, tiposData, statusData]) => {
         if (servicoData) {
-          // Formatar datas para o input type="date" e datetime-local
           const formattedData = {
             ...servicoData,
             data_previsao_saida: servicoData.data_previsao_saida ? new Date(servicoData.data_previsao_saida).toISOString().split("T")[0] : "",
@@ -131,7 +133,7 @@ export default function EditarServicoPage() {
         throw new Error(errorData.error || "Falha ao atualizar serviço");
       }
       showSuccess("Serviço atualizado com sucesso!");
-      router.push(`/servicos/${servicoId}`); // Volta para a página de detalhes
+      router.push(`/servicos/${servicoId}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         showError(err.message);
@@ -145,134 +147,201 @@ export default function EditarServicoPage() {
     }
   };
 
-  if (isLoading) return <p className="text-center mt-8">Carregando dados para edição...</p>;
-  if (error && !isSubmitting) return <p className="text-red-500 bg-red-100 p-3 rounded mb-4 text-center mt-8">Erro: {error}</p>;
+  const inputClassName = "mt-1 block w-full shadow-sm sm:text-sm border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:ring-violet-500 focus:border-violet-500 bg-slate-50 dark:bg-slate-800/50 dark:border-slate-700 dark:text-slate-100 dark:focus:ring-violet-400 dark:focus:border-violet-400 dark:placeholder-slate-500 transition-colors";
 
+  const tabs: TabItem[] = [
+    {
+      id: "servico-cliente",
+      label: "Serviço & Cliente",
+      icon: WrenchScrewdriverIcon,
+      content: (
+        <div className="space-y-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Field id="id_cliente" label="Cliente" required error={errors.id_cliente?.message}>
+              <select
+                id="id_cliente"
+                {...register("id_cliente")}
+                className={inputClassName}
+              >
+                <option value="">Selecione um cliente</option>
+                {clientes.map(cliente => (
+                  <option key={cliente.id_cliente} value={cliente.id_cliente!}>
+                    {cliente.tipo_pessoa === "FISICA" ? cliente.nome_completo : cliente.razao_social} ({cliente.email})
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            <Field id="id_tipo_servico" label="Tipo de Serviço" required error={errors.id_tipo_servico?.message}>
+              <select
+                id="id_tipo_servico"
+                {...register("id_tipo_servico")}
+                className={inputClassName}
+              >
+                <option value="">Selecione o tipo de serviço</option>
+                {tiposServico.map(tipo => (
+                  <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!}>
+                    {tipo.nome_tipo_servico}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            <Field id="id_status_atual" label="Status Atual" required error={errors.id_status_atual?.message}>
+              <select
+                id="id_status_atual"
+                {...register("id_status_atual")}
+                className={inputClassName}
+              >
+                <option value="">Selecione o status</option>
+                {statusServico.map(status => (
+                  <option key={status.id_status_servico} value={status.id_status_servico!}>
+                    {status.nome_status}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <Field id="descricao_problema" label="Descrição do Problema/Solicitação" required error={errors.descricao_problema?.message}>
+            <textarea
+              id="descricao_problema"
+              {...register("descricao_problema")}
+              rows={4}
+              placeholder="Descreva detalhadamente o problema relatado pelo cliente..."
+              className={inputClassName}
+            />
+          </Field>
+        </div>
+      )
+    },
+    {
+      id: "equipamento",
+      label: "Equipamento",
+      icon: ComputerDesktopIcon,
+      content: (
+        <div className="space-y-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field id="equipamento_descricao" label="Descrição do Equipamento" error={errors.equipamento_descricao?.message}>
+              <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className={inputClassName} placeholder="Ex: Notebook, Smartphone..." />
+            </Field>
+            <Field id="equipamento_marca" label="Marca" error={errors.equipamento_marca?.message}>
+              <input type="text" id="equipamento_marca" {...register("equipamento_marca")} className={inputClassName} placeholder="Ex: Dell, Samsung..." />
+            </Field>
+            <Field id="equipamento_modelo" label="Modelo" error={errors.equipamento_modelo?.message}>
+              <input type="text" id="equipamento_modelo" {...register("equipamento_modelo")} className={inputClassName} placeholder="Ex: Inspiron 15, Galaxy S21..." />
+            </Field>
+            <Field id="equipamento_num_serie" label="Número de Série" error={errors.equipamento_num_serie?.message}>
+              <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className={inputClassName} placeholder="S/N do equipamento" />
+            </Field>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: "valores-solucao",
+      label: "Valores & Solução",
+      icon: CurrencyDollarIcon,
+      content: (
+        <div className="space-y-4 pt-2">
+          <h2 className="text-md font-semibold text-slate-800 dark:text-slate-200">Datas e Prazos</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field id="data_previsao_saida" label="Data de Previsão de Saída" error={errors.data_previsao_saida?.message}>
+              <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className={inputClassName} />
+            </Field>
+            <Field id="data_efetiva_saida" label="Data Efetiva de Saída" error={errors.data_efetiva_saida?.message}>
+              <input type="date" id="data_efetiva_saida" {...register("data_efetiva_saida")} className={inputClassName} />
+            </Field>
+          </div>
+
+          <hr className="border-slate-200 dark:border-slate-800 my-4" />
+          <h2 className="text-md font-semibold text-slate-800 dark:text-slate-200">Valores</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Field id="valor_servico" label="Valor Total (R$)" error={errors.valor_servico?.message}>
+              <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
+            </Field>
+            <Field id="valor_pecas" label="Valor das Peças (R$)" error={errors.valor_pecas?.message}>
+              <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
+            </Field>
+            <Field id="valor_mao_de_obra" label="Valor da Mão de Obra (R$)" error={errors.valor_mao_de_obra?.message}>
+              <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
+            </Field>
+          </div>
+
+          <hr className="border-slate-200 dark:border-slate-800 my-4" />
+          <h2 className="text-md font-semibold text-slate-800 dark:text-slate-200">Diagnóstico e Observações</h2>
+          <div className="grid grid-cols-1 gap-4">
+            <Field id="descricao_solucao" label="Descrição da Solução Aplicada" error={errors.descricao_solucao?.message}>
+              <textarea id="descricao_solucao" {...register("descricao_solucao")} rows={3} className={inputClassName} placeholder="O que foi feito para solucionar o problema..." />
+            </Field>
+            <Field id="observacoes_internas" label="Observações Internas" error={errors.observacoes_internas?.message}>
+              <textarea id="observacoes_internas" {...register("observacoes_internas")} rows={2} className={inputClassName} placeholder="Anotações visíveis apenas para a equipe..." />
+            </Field>
+          </div>
+        </div>
+      )
+    }
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-4 sm:p-6 mt-8 max-w-4xl flex items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-violet-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Carregando dados da OS...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !isSubmitting) {
+    return (
+      <div className="container mx-auto p-4 sm:p-6 mt-8 max-w-4xl">
+        <div className="text-red-600 bg-red-50 dark:bg-red-500/10 dark:text-red-400 p-4 rounded-lg border border-red-200 dark:border-red-500/20 mb-6 flex items-center gap-3">
+          <p className="text-sm font-medium">Erro: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-2xl font-bold mb-6  text-gray-800">Editar Ordem de Serviço (OS: {servicoId?.substring(0, 8)}...)</h1>
-        {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="container mx-auto p-4 sm:p-6 mt-8 max-w-4xl flex-1">
+      <div className="bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-4 sm:p-8 transition-colors">
+        <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
-            <label htmlFor="id_cliente" className="block text-sm font-medium text-gray-700">Cliente</label>
-            <select
-              id="id_cliente"
-              {...register("id_cliente")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-            >
-              <option value="">Selecione um cliente</option>
-              {clientes.map(cliente => (
-                <option key={cliente.id_cliente} value={cliente.id_cliente!} className="bg-black">
-                  {cliente.tipo_pessoa === "FISICA" ? cliente.nome_completo : cliente.razao_social} ({cliente.email})
-                </option>
-              ))}
-            </select>
-            {errors.id_cliente && <p className="text-red-500 text-xs mt-1">{errors.id_cliente.message}</p>}
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+              Editar Ordem de Serviço
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-mono">
+              OS: {servicoId?.substring(0, 8)}...
+            </p>
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="id_tipo_servico" className="block text-sm font-medium text-gray-700">Tipo de Serviço</label>
-            <select
-              id="id_tipo_servico"
-              {...register("id_tipo_servico")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-            >
-              <option value="">Selecione o tipo de serviço</option>
-              {tiposServico.map(tipo => (
-                <option key={tipo.id_tipo_servico} value={tipo.id_tipo_servico!} >
-                  {tipo.nome_tipo_servico}
-                </option>
-              ))}
-            </select>
-            {errors.id_tipo_servico && <p className="text-red-500 text-xs mt-1">{errors.id_tipo_servico.message}</p>}
+        {error && (
+          <div className="text-red-600 bg-red-50 dark:bg-red-500/10 dark:text-red-400 p-4 rounded-lg border border-red-200 dark:border-red-500/20 mb-6 flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm font-medium">{error}</p>
           </div>
-          <div>
-            <label htmlFor="id_status_atual" className="block text-sm font-medium text-gray-700">Status Atual do Serviço</label>
-            <select
-              id="id_status_atual"
-              {...register("id_status_atual")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md text-black"
-            >
-              <option value="">Selecione o status</option>
-              {statusServico.map(status => (
-                <option key={status.id_status_servico} value={status.id_status_servico!}>
-                  {status.nome_status}
-                </option>
-              ))}
-            </select>
-            {errors.id_status_atual && <p className="text-red-500 text-xs mt-1">{errors.id_status_atual.message}</p>}
-          </div>
+        )}
 
-          <div>
-            <label htmlFor="descricao_problema" className="block text-sm font-medium text-gray-700">Descrição do Problema/Solicitação</label>
-            <textarea id="descricao_problema" {...register("descricao_problema")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-            {errors.descricao_problema && <p className="text-red-500 text-xs mt-1">{errors.descricao_problema.message}</p>}
-          </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          <Tabs tabs={tabs} />
 
-          <h2 className="text-xl font-semibold text-gray-800">Detalhes do Equipamento</h2>
-          <div>
-            <label htmlFor="equipamento_descricao" className="block text-sm font-medium text-gray-700">Descrição do Equipamento</label>
-            <input type="text" id="equipamento_descricao" {...register("equipamento_descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="equipamento_marca" className="block text-sm font-medium text-gray-700">Marca</label>
-            <input type="text" id="equipamento_marca" {...register("equipamento_marca")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="equipamento_modelo" className="block text-sm font-medium text-gray-700">Modelo</label>
-            <input type="text" id="equipamento_modelo" {...register("equipamento_modelo")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="equipamento_num_serie" className="block text-sm font-medium text-gray-700">Número de Série</label>
-            <input type="text" id="equipamento_num_serie" {...register("equipamento_num_serie")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-
-          <h2 className="text-xl font-semibold text-gray-800">Valores e Prazos</h2>
-          <div>
-            <label htmlFor="data_previsao_saida" className="block text-sm font-medium text-gray-700">Data de Previsão de Saída</label>
-            <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="data_efetiva_saida" className="block text-sm font-medium text-gray-700">Data Efetiva de Saída</label>
-            <input type="date" id="data_efetiva_saida" {...register("data_efetiva_saida")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="valor_servico" className="block text-sm font-medium text-gray-700">Valor Total do Serviço (R$)</label>
-            <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="valor_pecas" className="block text-sm font-medium text-gray-700">Valor das Peças (R$)</label>
-            <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="valor_mao_de_obra" className="block text-sm font-medium text-gray-700">Valor da Mão de Obra (R$)</label>
-            <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-
-          <h2 className="text-xl font-semibold text-gray-800">Solução e Observações</h2>
-          <div>
-            <label htmlFor="descricao_solucao" className="block text-sm font-medium text-gray-700">Descrição da Solução Aplicada</label>
-            <textarea id="descricao_solucao" {...register("descricao_solucao")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-          <div>
-            <label htmlFor="observacoes_internas" className="block text-sm font-medium text-gray-700">Observações Internas</label>
-            <textarea id="observacoes_internas" {...register("observacoes_internas")} rows={3} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-gray-500" />
-          </div>
-
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              onClick={() => router.push(`/servicos/${servicoId}`)} // Voltar para detalhes
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
+              onClick={() => router.push(`/servicos/${servicoId}`)}
+              className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium py-2.5 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 w-full sm:w-auto text-sm"
               disabled={isSubmitting}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+              className="bg-violet-600 dark:bg-violet-500 hover:bg-violet-700 dark:hover:bg-violet-600 text-white font-medium py-2.5 px-6 rounded-lg disabled:opacity-50 transition-colors shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 w-full sm:w-auto text-sm"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Salvando..." : "Salvar Alterações"}
@@ -283,4 +352,3 @@ export default function EditarServicoPage() {
     </div>
   );
 }
-

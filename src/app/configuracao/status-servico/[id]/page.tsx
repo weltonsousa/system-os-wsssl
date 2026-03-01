@@ -133,50 +133,52 @@ export default function StatusServicoDetailPage() {
   if (!isLoading && !statusServico && !error) return <p>Cliente não encontrado ou dados inválidos.</p>; // Caso não carregue
 
   return (
-    <div className="container mx-auto p-4  bg-neutral-100 rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-blue-600">Editar Tipo de Status</h1>
-      {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <div className="container mx-auto p-4  max-w-4xl">
+      <div className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg shadow-sm p-6">
+        <h1 className="text-2xl font-bold mb-6 text-blue-600">Editar Tipo de Status</h1>
+        {error && <p className="text-red-500 bg-red-100 p-3 rounded mb-4">{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-        <div>
-          <label htmlFor="nome_status" className="block text-sm font-medium text-gray-700">Nome</label>
-          <input type="text" id="nome_status" {...register("nome_status")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-          {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>
-          <input type="text" id="descricao" {...register("descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
-          {errors.descricao && <p className="text-red-500 text-xs mt-1">{errors.descricao.message}</p>}
-        </div>
+          <div>
+            <label htmlFor="nome_status" className="block text-sm font-medium text-gray-700">Nome</label>
+            <input type="text" id="nome_status" {...register("nome_status")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+            {errors.nome_status && <p className="text-red-500 text-xs mt-1">{errors.nome_status.message}</p>}
+          </div>
+          <div>
+            <label htmlFor="descricao" className="block text-sm font-medium text-gray-700">Descrição</label>
+            <input type="text" id="descricao" {...register("descricao")} className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-2 text-black" />
+            {errors.descricao && <p className="text-red-500 text-xs mt-1">{errors.descricao.message}</p>}
+          </div>
 
-        <div className="flex justify-between items-center pt-4">
-          <button
-            type="button"
-            onClick={handleDeleteStatusServico}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-            disabled={isSubmitting}
-          >
-            Excluir Tipo de Status
-          </button>
-          <div className="space-x-3">
+          <div className="flex justify-between items-center pt-4">
             <button
               type="button"
-              onClick={() => router.back()}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
+              onClick={handleDeleteStatusServico}
+              className="bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20 hover:bg-rose-100 dark:hover:bg-rose-500/20 font-medium py-2 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 text-sm disabled:opacity-50 flex-1 sm:flex-none text-center"
               disabled={isSubmitting}
             >
-              Cancelar
+              Excluir Tipo de Status
             </button>
-            <button
-              type="submit"
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Salvando..." : "Salvar Alterações"}
-            </button>
+            <div className="space-x-3">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium py-2.5 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 w-full sm:w-auto text-sm"
+                disabled={isSubmitting}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="bg-violet-600 dark:bg-violet-500 hover:bg-violet-700 dark:hover:bg-violet-600 text-white font-medium py-2.5 px-6 rounded-lg disabled:opacity-50 transition-colors shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-violet-500 w-full sm:w-auto text-sm"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
