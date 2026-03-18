@@ -181,7 +181,8 @@ export default function ServicoDetailPage() {
                 </p>
               </div>
               <div className="mt-4">
-                <Link href={`/clientes/${servico.id_cliente}/editar`} className="text-sm font-medium text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 transition-colors">
+                <Link href={`/clientes/${servico.id_cliente}/editar`}
+                  className="text-sm font-medium text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 transition-colors">
                   Ver/Editar Cliente &rarr;
                 </Link>
               </div>
