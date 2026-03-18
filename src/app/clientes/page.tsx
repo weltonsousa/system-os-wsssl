@@ -92,7 +92,9 @@ export default function ClientesPage() {
                     <td className="py-3 px-4 text-black">{cliente.email}</td>
                     <td className="py-3 px-4 text-black">{maskPhone(cliente.telefone_principal)}</td>
                     <td className="py-3 px-4 text-black">
-                      <Link href={`/clientes/${cliente.id_cliente}/editar`} className="text-blue-500 hover:underline mr-2">
+                      <Link href={`/clientes/${cliente.id_cliente}/editar`}
+                        // className="text-blue-500 hover:underline mr-2"
+                        className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium py-2.5 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 w-full sm:w-auto text-sm">
                         Editar
                       </Link>
                       {/* Botão de excluir pode ser adicionado aqui com confirmação */}

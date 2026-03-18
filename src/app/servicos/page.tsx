@@ -158,7 +158,9 @@ export default function ServicosPage() {
                     <td className="py-3 px-4 text-black">{servico.status_atual?.nome_status}</td>
                     <td className="py-3 px-4 text-black">R$ {(servico.valor_servico || 0).toFixed(2)}</td>
                     <td className="py-3 px-4">
-                      <Link href={`/servicos/${servico.id_servico}`} className="text-blue-500 hover:underline mr-2">
+                      <Link href={`/servicos/${servico.id_servico}`}
+                        className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium py-2.5 px-6 rounded-lg transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 w-full sm:w-auto text-sm"
+                      >
                         Detalhes
                       </Link>
                       {/* Adicionar link para editar e botão de excluir posteriormente */}
