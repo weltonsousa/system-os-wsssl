@@ -3,6 +3,45 @@ export enum TipoPessoa {
   JURIDICA = "JURIDICA",
 }
 
+export enum TipoFornecedor {
+  TI = "TI",
+  PECAS = "PECAS",
+  SERVICO = "SERVICO",
+  GERAL = "GERAL",
+}
+
+export interface Fornecedor {
+  id_fornecedor?: string;
+  tipo_pessoa: TipoPessoa;
+  tipo_fornecedor: TipoFornecedor;
+  nome_completo?: string | null;
+  cpf?: string | null;
+  razao_social?: string | null;
+  nome_fantasia?: string | null;
+  cnpj?: string | null;
+  inscricao_estadual?: string | null;
+  inscricao_municipal?: string | null;
+  nome_contato_pj?: string | null;
+  telefone_principal: string;
+  telefone_secundario?: string | null;
+  email: string;
+  website?: string | null;
+  cep?: string | null;
+  rua?: string | null;
+  numero?: string | null;
+  complemento?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  estado_uf?: string | null;
+  produtos_servicos?: string | null;
+  prazo_entrega?: string | null;
+  condicoes_pagamento?: string | null;
+  observacoes?: string | null;
+  data_cadastro?: string;
+  data_atualizacao?: string;
+  ativo?: boolean;
+}
+
 export interface Cliente {
   id_cliente?: string;
   tipo_pessoa: TipoPessoa;
