@@ -11,10 +11,17 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// Enum para tipo de pessoa (cliente)
+// Enum para tipo de pessoa (cliente/fornecedor)
 enum TipoPessoa {
   FISICA
   JURIDICA
+}
+
+enum TipoFornecedor {
+  TI
+  PECAS
+  SERVICO
+  GERAL
 }
 
 model Cliente {
@@ -114,6 +121,45 @@ model HistoricoServico {
   // id_usuario_alteracao String?
 
   @@map("historico_servico")
+}
+
+model Fornecedor {
+  id_fornecedor       String         @id @default(cuid())
+  tipo_pessoa         TipoPessoa     @default(JURIDICA)
+  tipo_fornecedor     TipoFornecedor @default(GERAL)
+  // Campos Pessoa Física
+  nome_completo       String?
+  cpf                 String?        @unique
+  // Campos Pessoa Jurídica
+  razao_social        String?
+  nome_fantasia       String?
+  cnpj                String?        @unique
+  inscricao_estadual  String?
+  inscricao_municipal String?
+  nome_contato_pj     String?
+  // Campos Comuns
+  telefone_principal  String
+  telefone_secundario String?
+  email               String         @unique
+  website             String?
+  // Endereço
+  cep                 String?
+  rua                 String?
+  numero              String?
+  complemento         String?
+  bairro              String?
+  cidade              String?
+  estado_uf           String?
+  // Dados Comerciais
+  produtos_servicos   String?
+  prazo_entrega       String?
+  condicoes_pagamento String?
+  observacoes         String?
+  ativo               Boolean        @default(true)
+  data_cadastro       DateTime       @default(now())
+  data_atualizacao    DateTime       @updatedAt
+
+  @@map("fornecedores")
 }
 
 model User {

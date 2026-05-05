@@ -51,6 +51,7 @@ const Navbar = () => {
               <>
                 <Link href="/clientes" className={buttonVariants('ghost', 'sm')}>Clientes</Link>
                 <Link href="/servicos" className={buttonVariants('ghost', 'sm')}>Serviços</Link>
+                <Link href="/fornecedores" className={buttonVariants('ghost', 'sm')}>Fornecedores</Link>
                 <Link href="/relatorios" className={buttonVariants('ghost', 'sm')}>Relatórios</Link>
                 <Link href="/configuracao" className={buttonVariants('ghost', 'sm')}>Configuração</Link>
                 <div className="h-6 w-px bg-slate-200 mx-2" />
@@ -96,6 +97,7 @@ const Navbar = () => {
                   </div>
                   <Link href="/clientes" onClick={() => setIsMenuOpen(false)} className="block py-2 text-slate-600 hover:text-indigo-600">Clientes</Link>
                   <Link href="/servicos" onClick={() => setIsMenuOpen(false)} className="block py-2 text-slate-600 hover:text-indigo-600">Serviços</Link>
+                  <Link href="/fornecedores" onClick={() => setIsMenuOpen(false)} className="block py-2 text-slate-600 hover:text-indigo-600">Fornecedores</Link>
                   <Link href="/relatorios" onClick={() => setIsMenuOpen(false)} className="block py-2 text-slate-600 hover:text-indigo-600">Relatórios</Link>
                   <Link href="/configuracao" onClick={() => setIsMenuOpen(false)} className="block py-2 text-slate-600 hover:text-indigo-600">Configuração</Link>
                   <button
