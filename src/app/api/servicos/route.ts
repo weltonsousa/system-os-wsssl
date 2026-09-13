@@ -132,6 +132,7 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(searchParams.get("limit") || "10", 10);
   const search = searchParams.get("search") || "";
   const status_filter = searchParams.get("status_filter") || "";
+  const mes_referencia = searchParams.get("mes_referencia") || ""; // formato "YYYY-MM"
 
   const skip = (page - 1) * limit;
 
@@ -139,15 +140,22 @@ export async function GET(request: NextRequest) {
     const whereClause: import("@prisma/client").Prisma.ServicoWhereInput = {};
     if (search) {
       whereClause.OR = [
-        { id_servico: { contains: search } },
-        { descricao_problema: { contains: search } },
-        { equipamento_descricao: { contains: search } },
-        { cliente: { nome_completo: { contains: search } } },
-        { cliente: { razao_social: { contains: search } } },
+        { id_servico: { contains: search, mode: "insensitive" } },
+        { descricao_problema: { contains: search, mode: "insensitive" } },
+        { equipamento_descricao: { contains: search, mode: "insensitive" } },
+        { cliente: { nome_completo: { contains: search, mode: "insensitive" } } },
+        { cliente: { razao_social: { contains: search, mode: "insensitive" } } },
       ];
     }
     if (status_filter) {
       whereClause.id_status_atual = status_filter;
+    }
+    if (/^\d{4}-\d{2}$/.test(mes_referencia)) {
+      const [ano, mes] = mes_referencia.split("-").map(Number);
+      whereClause.data_entrada = {
+        gte: new Date(ano, mes - 1, 1),
+        lt: new Date(ano, mes, 1),
+      };
     }
 
     const servicos = await prisma.servico.findMany({
