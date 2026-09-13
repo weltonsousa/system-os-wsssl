@@ -202,6 +202,14 @@ export default function ServicoDetailPage() {
                     {servico.status_atual?.nome_status}
                   </span>
                 </p>
+                {servico.recorrente && (
+                  <p className="text-slate-600 dark:text-slate-400">
+                    <strong className="text-slate-800 dark:text-slate-300">Cobrança Recorrente:</strong>
+                    <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-500/20 dark:text-violet-300">
+                      {servico.numero_recorrencia ?? "?"} de {servico.total_recorrencias ?? "?"}
+                    </span>
+                  </p>
+                )}
                 <p className="text-slate-600 dark:text-slate-400">
                   <strong className="text-slate-800 dark:text-slate-300">Data de Entrada:</strong> {new Date(servico.data_entrada!).toLocaleDateString()}
                 </p>
@@ -223,6 +231,39 @@ export default function ServicoDetailPage() {
             <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-2">Descrição do Problema</h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 whitespace-pre-wrap">{servico.descricao_problema}</p>
           </div>
+
+          {servico.recorrente && servico.repeticoes && servico.repeticoes.length > 0 && (
+            <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-xl border border-slate-100 dark:border-slate-800/60">
+              <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-3">Lançamentos desta Cobrança Recorrente</h2>
+              <ul className="divide-y divide-slate-200 dark:divide-slate-700/60">
+                {servico.repeticoes.map((rep) => (
+                  <li key={rep.id_servico} className="py-2 flex items-center justify-between text-sm gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold ${rep.id_servico === servico.id_servico ? "bg-violet-600 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"}`}>
+                        {rep.numero_recorrencia ?? "?"}
+                      </span>
+                      <span className="text-slate-600 dark:text-slate-400">
+                        {new Date(rep.data_entrada).toLocaleDateString()}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        {rep.status_atual?.nome_status}
+                      </span>
+                      {rep.valor_servico ? (
+                        <span className="text-slate-600 dark:text-slate-400">R$ {rep.valor_servico.toFixed(2)}</span>
+                      ) : null}
+                    </div>
+                    {rep.id_servico === servico.id_servico ? (
+                      <span className="text-xs italic text-slate-400 dark:text-slate-500">OS atual</span>
+                    ) : (
+                      <Link href={`/servicos/${rep.id_servico}`} className="text-violet-600 hover:text-violet-700 dark:text-violet-400 dark:hover:text-violet-300 font-medium">
+                        Ver OS &rarr;
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )
     },

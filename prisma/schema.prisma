@@ -103,6 +103,15 @@ model Servico {
   data_criacao          DateTime      @default(now())
   data_atualizacao      DateTime      @updatedAt
 
+  // Cobrança recorrente: quando marcado, esta OS faz parte de uma série
+  // de lançamentos mensais gerados automaticamente a partir da OS de origem.
+  recorrente          Boolean   @default(false)
+  servico_origem      Servico?  @relation("RecorrenciaServico", fields: [id_servico_origem], references: [id_servico], onDelete: SetNull)
+  id_servico_origem   String?
+  repeticoes          Servico[] @relation("RecorrenciaServico")
+  numero_recorrencia  Int?
+  total_recorrencias  Int?
+
   historico HistoricoServico[]
 
   @@map("servicos")
