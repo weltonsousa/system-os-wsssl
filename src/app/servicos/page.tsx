@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import { Servico, PaginatedResponse, TipoServico, StatusServico } from "@/types";
 import Card from "@/components/ui/Card";
 
-async function fetchServicos(page: number = 1, limit: number = 10, search: string = "", status_filter: string = "") {
+async function fetchServicos(page: number = 1, limit: number = 10, search: string = "", status_filter: string = "", mes_referencia: string = "") {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
   });
   if (search) params.append("search", search);
   if (status_filter) params.append("status_filter", status_filter);
+  if (mes_referencia) params.append("mes_referencia", mes_referencia);
 
   const res = await fetch(`/api/servicos?${params.toString()}`);
   if (!res.ok) {
@@ -46,6 +47,7 @@ export default function ServicosPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [mesReferencia, setMesReferencia] = useState("");
   // const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
   const [statusServicos, setStatusServicos] = useState<StatusServico[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ export default function ServicosPage() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetchServicos(currentPage, 10, searchTerm, statusFilter)
+    fetchServicos(currentPage, 10, searchTerm, statusFilter, mesReferencia)
       .then(data => {
         setServicos(data.data);
         setTotalPages(data.totalPages);
@@ -78,7 +80,7 @@ export default function ServicosPage() {
         setError(err.message || "Ocorreu um erro ao buscar os serviços.");
         setLoading(false);
       });
-  }, [currentPage, searchTerm, statusFilter]);
+  }, [currentPage, searchTerm, statusFilter, mesReferencia]);
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -90,6 +92,11 @@ export default function ServicosPage() {
 
   const handleStatusFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusFilter(event.target.value);
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  const handleMesReferenciaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMesReferencia(event.target.value);
     setCurrentPage(1); // Reset to first page on filter change
   };
 
@@ -124,6 +131,23 @@ export default function ServicosPage() {
               </option>
             ))}
           </select>
+          <input
+            type="month"
+            name="mes_referencia"
+            value={mesReferencia}
+            onChange={handleMesReferenciaChange}
+            title="Filtrar por mês da Data de Entrada"
+            className="border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 p-2 rounded-md w-full md:w-auto text-slate-900 border"
+          />
+          {mesReferencia && (
+            <button
+              type="button"
+              onClick={() => { setMesReferencia(""); setCurrentPage(1); }}
+              className="text-sm text-slate-500 hover:text-slate-700 underline"
+            >
+              Limpar mês
+            </button>
+          )}
           <button type="submit" className="bg-slate-700 hover:bg-slate-800 text-white font-medium py-2 px-4 rounded-md transition-colors shadow-sm">
             Buscar
           </button>
