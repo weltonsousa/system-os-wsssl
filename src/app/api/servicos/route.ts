@@ -16,7 +16,18 @@ const servicoSchema = z.object({
   valor_mao_de_obra: z.number().optional().nullable(),
   descricao_solucao: z.string().optional().nullable(),
   observacoes_internas: z.string().optional().nullable(),
-});
+  recorrente: z.boolean().optional().default(false),
+  quantidade_repeticoes: z.number().int().min(1).max(60).optional().nullable(),
+}).refine(
+  (data) => !data.recorrente || (data.quantidade_repeticoes ?? 0) >= 1,
+  { message: "Informe quantas vezes a cobrança deve se repetir nos meses seguintes.", path: ["quantidade_repeticoes"] }
+);
+
+function adicionarMeses(data: Date, meses: number): Date {
+  const resultado = new Date(data.getTime());
+  resultado.setMonth(resultado.getMonth() + meses);
+  return resultado;
+}
 
 // const servicoUpdateSchema = servicoSchema.partial().extend({
 //   data_efetiva_saida: z.string().datetime({ offset: true }).optional().nullable(),
@@ -43,11 +54,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Status inicial 'Pendente' não encontrado. Configure os status primeiro." }, { status: 500 });
     }
 
+    const { recorrente, quantidade_repeticoes, ...dadosServico } = data;
+    const totalRecorrencias = recorrente ? (quantidade_repeticoes ?? 0) + 1 : undefined;
+    const dataEntrada = new Date();
+
     const novoServico = await prisma.servico.create({
       data: {
-        ...data,
+        ...dadosServico,
         id_status_atual: statusInicial.id_status_servico, // Garante que o status inicial seja "Pendente"
-        data_entrada: new Date(),
+        data_entrada: dataEntrada,
+        recorrente: !!recorrente,
+        numero_recorrencia: recorrente ? 1 : undefined,
+        total_recorrencias: totalRecorrencias,
       },
     });
 
@@ -59,6 +77,44 @@ export async function POST(request: NextRequest) {
         observacao: "Serviço criado",
       },
     });
+
+    // Gera os lançamentos das repetições futuras (meses seguintes) para a mesma cobrança
+    if (recorrente && quantidade_repeticoes && quantidade_repeticoes >= 1) {
+      for (let i = 1; i <= quantidade_repeticoes; i++) {
+        const repeticao = await prisma.servico.create({
+          data: {
+            id_cliente: dadosServico.id_cliente,
+            id_tipo_servico: dadosServico.id_tipo_servico,
+            descricao_problema: dadosServico.descricao_problema,
+            equipamento_descricao: dadosServico.equipamento_descricao,
+            equipamento_marca: dadosServico.equipamento_marca,
+            equipamento_modelo: dadosServico.equipamento_modelo,
+            equipamento_num_serie: dadosServico.equipamento_num_serie,
+            data_entrada: adicionarMeses(dataEntrada, i),
+            data_previsao_saida: dadosServico.data_previsao_saida
+              ? adicionarMeses(new Date(dadosServico.data_previsao_saida), i).toISOString()
+              : null,
+            valor_servico: dadosServico.valor_servico,
+            valor_pecas: dadosServico.valor_pecas,
+            valor_mao_de_obra: dadosServico.valor_mao_de_obra,
+            observacoes_internas: dadosServico.observacoes_internas,
+            id_status_atual: statusInicial.id_status_servico,
+            recorrente: true,
+            id_servico_origem: novoServico.id_servico,
+            numero_recorrencia: i + 1,
+            total_recorrencias: totalRecorrencias,
+          },
+        });
+
+        await prisma.historicoServico.create({
+          data: {
+            id_servico: repeticao.id_servico,
+            id_status_novo: statusInicial.id_status_servico,
+            observacao: `Serviço gerado automaticamente (repetição ${i + 1}/${totalRecorrencias} da cobrança recorrente)`,
+          },
+        });
+      }
+    }
 
     return NextResponse.json(novoServico, { status: 201 });
   } catch (error) {

@@ -117,6 +117,20 @@ export interface Servico {
   data_criacao?: string; // ISOString
   data_atualizacao?: string; // ISOString
   historico?: HistoricoServico[];
+  recorrente?: boolean;
+  id_servico_origem?: string | null;
+  numero_recorrencia?: number | null;
+  total_recorrencias?: number | null;
+  servico_origem?: RecorrenciaServicoResumo | null;
+  repeticoes?: RecorrenciaServicoResumo[];
+}
+
+export interface RecorrenciaServicoResumo {
+  id_servico: string;
+  data_entrada: string; // ISOString
+  numero_recorrencia?: number | null;
+  valor_servico?: number | null;
+  status_atual?: { nome_status: string };
 }
 
 export interface PaginatedResponse<T> {

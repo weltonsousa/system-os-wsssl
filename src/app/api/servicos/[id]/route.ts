@@ -40,13 +40,58 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             status_novo: { select: { nome_status: true } },
           },
         },
+        servico_origem: {
+          select: { id_servico: true, data_entrada: true, numero_recorrencia: true },
+        },
+        repeticoes: {
+          select: {
+            id_servico: true,
+            data_entrada: true,
+            numero_recorrencia: true,
+            valor_servico: true,
+            status_atual: { select: { nome_status: true } },
+          },
+          orderBy: { numero_recorrencia: "asc" },
+        },
       },
     });
 
     if (!servico) {
       return NextResponse.json({ error: "Serviço não encontrado." }, { status: 404 });
     }
-    return NextResponse.json(servico);
+
+    // Monta a lista com todas as ocorrências da série (origem + repetições), incluindo a própria OS atual
+    let repeticoes: typeof servico.repeticoes = [];
+    if (servico.recorrente) {
+      const idOrigem = servico.id_servico_origem ?? servico.id_servico;
+      const origem = await prisma.servico.findUnique({
+        where: { id_servico: idOrigem },
+        select: {
+          id_servico: true,
+          data_entrada: true,
+          numero_recorrencia: true,
+          valor_servico: true,
+          status_atual: { select: { nome_status: true } },
+          repeticoes: {
+            select: {
+              id_servico: true,
+              data_entrada: true,
+              numero_recorrencia: true,
+              valor_servico: true,
+              status_atual: { select: { nome_status: true } },
+            },
+          },
+        },
+      });
+      if (origem) {
+        const { repeticoes: outrasRepeticoes, ...origemResumo } = origem;
+        repeticoes = [origemResumo, ...outrasRepeticoes].sort(
+          (a, b) => (a.numero_recorrencia ?? 0) - (b.numero_recorrencia ?? 0)
+        );
+      }
+    }
+
+    return NextResponse.json({ ...servico, repeticoes });
   } catch (error) {
     console.error(`Erro ao buscar serviço ${id_servico}:`, error);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });

@@ -23,7 +23,12 @@ const servicoFormSchema = z.object({
   valor_servico: z.number().nullable().optional(),
   valor_pecas: z.number().nullable().optional(),
   valor_mao_de_obra: z.number().nullable().optional(),
-});
+  recorrente: z.boolean().optional(),
+  quantidade_repeticoes: z.number().nullable().optional(),
+}).refine(
+  (data) => !data.recorrente || (data.quantidade_repeticoes ?? 0) >= 1,
+  { message: "Informe quantas vezes a cobrança deve se repetir", path: ["quantidade_repeticoes"] }
+);
 
 type ServicoFormData = z.infer<typeof servicoFormSchema>;
 
@@ -59,10 +64,13 @@ export default function CadastrarServicoPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<ServicoFormData>({
     resolver: zodResolver(servicoFormSchema),
   });
+
+  const recorrente = watch("recorrente");
 
   useEffect(() => {
     setIsLoading(true);
@@ -88,6 +96,7 @@ export default function CadastrarServicoPage() {
       const payload = {
         ...data,
         data_previsao_saida: data.data_previsao_saida ? new Date(data.data_previsao_saida).toISOString() : null,
+        quantidade_repeticoes: data.recorrente ? data.quantidade_repeticoes : undefined,
       };
 
       const response = await fetch("/api/servicos", {
@@ -213,6 +222,43 @@ export default function CadastrarServicoPage() {
               <input type="number" step="0.01" id="valor_mao_de_obra" {...register("valor_mao_de_obra", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
             </Field>
           </div>
+
+          <div className="p-4 bg-slate-50 border border-slate-200 dark:bg-slate-800/50 dark:border-slate-700 rounded-lg space-y-3">
+            <div className="flex items-center gap-3">
+              <input
+                id="recorrente"
+                type="checkbox"
+                {...register("recorrente")}
+                className="w-5 h-5 text-violet-600 bg-white border-slate-300 rounded focus:ring-violet-600 dark:bg-slate-700 dark:border-slate-600 dark:focus:ring-violet-500"
+              />
+              <label htmlFor="recorrente" className="text-sm font-medium text-slate-700 dark:text-slate-200 cursor-pointer select-none">
+                Repetir esta cobrança nos meses seguintes
+              </label>
+            </div>
+            {recorrente && (
+              <div className="pl-8 max-w-xs">
+                <Field
+                  id="quantidade_repeticoes"
+                  label="Quantidade de meses seguintes"
+                  required
+                  error={errors.quantidade_repeticoes?.message}
+                  helper="Serão criadas automaticamente novas OS's com os mesmos dados e valores nos meses seguintes, para não precisar lançar a cobrança manualmente todo mês."
+                >
+                  <input
+                    type="number"
+                    min={1}
+                    max={60}
+                    step={1}
+                    id="quantidade_repeticoes"
+                    {...register("quantidade_repeticoes", { valueAsNumber: true })}
+                    className={inputClassName}
+                    placeholder="Ex: 3"
+                  />
+                </Field>
+              </div>
+            )}
+          </div>
+
           <p className="text-sm text-slate-500 dark:text-slate-400 italic">
             * Valores e datas podem ser atualizados posteriormente na tela de edição da ordem de serviço.
           </p>
