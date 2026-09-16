@@ -41,13 +41,29 @@ async function fetchStatusServico() {
   return json.data as StatusServico[];
 }
 
+const NOMES_MESES = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+];
+
+function gerarAnosParaFiltro(): number[] {
+  const anoAtual = new Date().getFullYear();
+  const anos: number[] = [];
+  for (let ano = anoAtual - 3; ano <= anoAtual + 6; ano++) {
+    anos.push(ano);
+  }
+  return anos;
+}
+
 export default function ServicosPage() {
   const [servicos, setServicos] = useState<Servico[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [mesReferencia, setMesReferencia] = useState("");
+  const [mesSelecionado, setMesSelecionado] = useState("");
+  const [anoSelecionado, setAnoSelecionado] = useState("");
+  const mesReferencia = mesSelecionado && anoSelecionado ? `${anoSelecionado}-${mesSelecionado}` : "";
   // const [tiposServico, setTiposServico] = useState<TipoServico[]>([]);
   const [statusServicos, setStatusServicos] = useState<StatusServico[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,9 +111,20 @@ export default function ServicosPage() {
     setCurrentPage(1); // Reset to first page on filter change
   };
 
-  const handleMesReferenciaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMesReferencia(event.target.value);
+  const handleMesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setMesSelecionado(event.target.value);
     setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  const handleAnoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setAnoSelecionado(event.target.value);
+    setCurrentPage(1); // Reset to first page on filter change
+  };
+
+  const handleLimparMes = () => {
+    setMesSelecionado("");
+    setAnoSelecionado("");
+    setCurrentPage(1);
   };
 
   return (
@@ -131,18 +158,38 @@ export default function ServicosPage() {
               </option>
             ))}
           </select>
-          <input
-            type="month"
-            name="mes_referencia"
-            value={mesReferencia}
-            onChange={handleMesReferenciaChange}
+          <select
+            name="mes"
+            value={mesSelecionado}
+            onChange={handleMesChange}
             title="Filtrar por mês da Data de Entrada"
             className="border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 p-2 rounded-md w-full md:w-auto text-slate-900 border"
-          />
-          {mesReferencia && (
+          >
+            <option value="">Mês</option>
+            {NOMES_MESES.map((nome, index) => (
+              <option key={nome} value={String(index + 1).padStart(2, "0")}>
+                {nome}
+              </option>
+            ))}
+          </select>
+          <select
+            name="ano"
+            value={anoSelecionado}
+            onChange={handleAnoChange}
+            title="Filtrar por ano da Data de Entrada"
+            className="border-slate-300 focus:ring-indigo-500 focus:border-indigo-500 p-2 rounded-md w-full md:w-auto text-slate-900 border"
+          >
+            <option value="">Ano</option>
+            {gerarAnosParaFiltro().map((ano) => (
+              <option key={ano} value={ano}>
+                {ano}
+              </option>
+            ))}
+          </select>
+          {(mesSelecionado || anoSelecionado) && (
             <button
               type="button"
-              onClick={() => { setMesReferencia(""); setCurrentPage(1); }}
+              onClick={handleLimparMes}
               className="text-sm text-slate-500 hover:text-slate-700 underline"
             >
               Limpar mês
