@@ -65,12 +65,20 @@ export default function CadastrarServicoPage() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ServicoFormData>({
     resolver: zodResolver(servicoFormSchema),
   });
 
   const recorrente = watch("recorrente");
+  const valorPecas = watch("valor_pecas");
+  const valorMaoDeObra = watch("valor_mao_de_obra");
+
+  useEffect(() => {
+    const total = (valorPecas || 0) + (valorMaoDeObra || 0);
+    setValue("valor_servico", total > 0 ? total : null);
+  }, [valorPecas, valorMaoDeObra, setValue]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -212,8 +220,16 @@ export default function CadastrarServicoPage() {
             <Field id="data_previsao_saida" label="Adicionar Previsão" error={errors.data_previsao_saida?.message}>
               <input type="date" id="data_previsao_saida" {...register("data_previsao_saida")} className={inputClassName} />
             </Field>
-            <Field id="valor_servico" label="Valor Total (R$)" error={errors.valor_servico?.message}>
-              <input type="number" step="0.01" id="valor_servico" {...register("valor_servico", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
+            <Field id="valor_servico" label="Valor Total (R$)" error={errors.valor_servico?.message} helper="Calculado automaticamente (Peças + Mão de Obra)">
+              <input
+                type="number"
+                step="0.01"
+                id="valor_servico"
+                {...register("valor_servico", { valueAsNumber: true })}
+                readOnly
+                className={`${inputClassName} bg-slate-100 dark:bg-slate-800 cursor-not-allowed`}
+                placeholder="0.00"
+              />
             </Field>
             <Field id="valor_pecas" label="Valor Peças (R$)" error={errors.valor_pecas?.message}>
               <input type="number" step="0.01" id="valor_pecas" {...register("valor_pecas", { valueAsNumber: true })} className={inputClassName} placeholder="0.00" />
